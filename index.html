@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MVNU Moodle Help Center</title>
+
+  <style>
+    :root {
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --explore: #00a9e0;
+      --explore-dark: #005570;
+      --purpose: #046a38;
+      --purpose-dark: #02351c;
+      --drive: #f1c400;
+      --white: #ffffff;
+      --text: #263f63;
+      --border: rgba(0, 40, 85, 0.14);
+      --shadow: 0 10px 30px rgba(0, 40, 85, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: DIN, "Arial Narrow", Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(0, 169, 224, 0.14), transparent 34rem),
+        radial-gradient(circle at bottom left, rgba(241, 196, 0, 0.12), transparent 30rem),
+        #ffffff;
+      color: var(--unity);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      width: 100%;
+      background: var(--unity);
+      color: var(--white);
+      padding: 0.75rem 1.25rem;
+    }
+
+    .top-bar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-label {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .top-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 2px solid transparent;
+    }
+
+    .top-links a:hover,
+    .top-links a:focus {
+      border-bottom-color: var(--explore);
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--unity) 0%, var(--explore-dark) 58%, var(--explore) 100%);
+      padding: clamp(2.25rem, 5vw, 4.75rem);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -5rem;
+      top: -5rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: 8rem;
+      bottom: -6rem;
+      width: 15rem;
+      height: 15rem;
+      border-radius: 50%;
+      background: rgba(241, 196, 0, 0.18);
+    }
+
+    .hero-content {
+      position: relative;
+      max-width: 820px;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: var(--drive);
+      color: var(--unity);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      color: var(--white);
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+      line-height: 0.98;
+      margin: 0 0 1rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      color: var(--white);
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      line-height: 1.6;
+      max-width: 760px;
+      margin: 0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 40, 85, 0.1);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(0, 40, 85, 0.16);
+    }
+
+    .card-accent {
+      height: 9px;
+    }
+
+    .card-accent.student {
+      background: var(--explore);
+    }
+
+    .card-accent.faculty {
+      background: var(--purpose);
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .icon-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+      font-size: 1.7rem;
+    }
+
+    .icon-badge.student {
+      background: rgba(0, 169, 224, 0.12);
+    }
+
+    .icon-badge.faculty {
+      background: rgba(4, 106, 56, 0.12);
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      line-height: 1.1;
+      margin: 0 0 0.75rem;
+      color: var(--unity);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      color: var(--text);
+      margin: 0 0 1.5rem;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.85rem 1.1rem;
+      border-radius: 12px;
+      transition: transform 140ms ease, filter 140ms ease;
+    }
+
+    .button:hover,
+    .button:focus {
+      transform: translateY(-1px);
+      filter: brightness(0.96);
+    }
+
+    .button.student {
+      background: var(--explore);
+      color: var(--unity);
+      box-shadow: 0 4px 14px rgba(0, 169, 224, 0.28);
+    }
+
+    .button.faculty {
+      background: var(--purpose);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(4, 106, 56, 0.24);
+    }
+
+    .support {
+      border-radius: 24px;
+      background: var(--unity);
+      color: var(--white);
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 40, 85, 0.16);
+    }
+
+    .support h2 {
+      color: var(--white);
+      margin-bottom: 0.7rem;
+    }
+
+    .support p {
+      color: var(--white);
+      margin: 0 0 1.25rem;
+      max-width: 980px;
+      line-height: 1.65;
+    }
+
+    .contact-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+    }
+
+    .contact-button {
+      display: inline-block;
+      text-decoration: none;
+      font-weight: 900;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+    }
+
+    .contact-button.helpdesk {
+      background: var(--white);
+      color: var(--unity);
+    }
+
+    .contact-button.cie {
+      background: var(--explore);
+      color: var(--unity);
+    }
+
+    footer {
+      padding: 1.25rem;
+      text-align: center;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--unity);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    footer a:hover,
+    footer a:focus {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 760px) {
+      .top-bar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        border-radius: 20px;
+      }
+
+      .card-body,
+      .support {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    const STUDENT_HELP_URL = "https://courses.mvnu.edu/course/view.php?id=16511";
+    const FACULTY_HELP_URL = "https://courses.mvnu.edu/course/view.php?id=16512";
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("[data-student-link]").forEach(function (link) {
+        link.href = STUDENT_HELP_URL;
+      });
+
+      document.querySelectorAll("[data-faculty-link]").forEach(function (link) {
+        link.href = FACULTY_HELP_URL;
+      });
+    });
+  </script>
+
+  <div class="page">
+    <header class="top-bar">
+      <div class="top-bar-inner">
+        <div class="brand-label">Mount Vernon Nazarene University</div>
+        <nav class="top-links" aria-label="Quick links">
+          <a data-student-link href="#">Student Help</a>
+          <a data-faculty-link href="#">Faculty Help</a>
+          <a href="mailto:cie@mvnu.edu">Contact CIE</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-content">
+            <div class="eyebrow">MVNU Moodle Support</div>
+            <h1 id="page-title">Moodle Help Center</h1>
+            <p>
+              Find Moodle support resources for students and instructors. Choose the section below that matches the help you need.
+            </p>
+          </div>
+        </section>
+
+        <section class="cards" aria-label="Moodle help options">
+          <article class="card">
+            <div class="card-accent student"></div>
+            <div class="card-body">
+              <div class="icon-badge student" aria-hidden="true">🎓</div>
+              <h2>Student Moodle Help</h2>
+              <p>
+                Guides for submitting assignments, taking quizzes, posting in forums, checking grades, viewing feedback, and resolving common Moodle issues.
+              </p>
+              <a data-student-link href="#" class="button student">
+                Go to Student Help
+              </a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-accent faculty"></div>
+            <div class="card-body">
+              <div class="icon-badge faculty" aria-hidden="true">📘</div>
+              <h2>Faculty Moodle Help</h2>
+              <p>
+                Resources for building and managing Moodle courses, including assignments, quizzes, forums, Turnitin, Respondus, gradebook setup, and recommended course practices.
+              </p>
+              <a data-faculty-link href="#" class="button faculty">
+                Go to Faculty Help
+              </a>
+            </div>
+          </article>
+        </section>
+
+        <section class="support" aria-labelledby="support-title">
+          <h2 id="support-title">Need more help?</h2>
+          <p>
+            For login, password, access, or device-related issues, contact the Helpdesk. For Moodle course setup, instructional design, grading workflows, or teaching-related Moodle questions, contact the Center for Innovative Education.
+          </p>
+
+          <div class="contact-buttons">
+            <a class="contact-button helpdesk" href="mailto:motherboard@mvnu.edu">
+              Helpdesk: motherboard@mvnu.edu
+            </a>
+
+            <a class="contact-button cie" href="mailto:cie@mvnu.edu">
+              CIE: cie@mvnu.edu
+            </a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Mount Vernon Nazarene University Moodle Help Center</span>
+    </footer>
+  </div>
+</body>
+</html>
