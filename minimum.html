@@ -115,6 +115,7 @@
     }
 
     .intro h2,
+    .template-links h2,
     .bottom-line h2 {
       margin: 0 0 6px 0;
       font-size: 1.15rem;
@@ -122,6 +123,7 @@
     }
 
     .intro p,
+    .template-links p,
     .card p,
     .bottom-line p {
       margin: 0;
@@ -196,6 +198,45 @@
       color: var(--white);
     }
 
+    .template-links {
+      margin-top: 26px;
+      background: var(--light-blue);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .template-links p {
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .template-button {
+      display: inline-block;
+      background: var(--explore);
+      color: var(--unity);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(0, 40, 85, 0.10);
+    }
+
+    .template-button:hover,
+    .template-button:focus {
+      background: var(--white);
+      color: var(--unity);
+      outline: 2px solid var(--explore);
+      outline-offset: 2px;
+    }
+
     .footer {
       margin: 18px 0 0 0;
       text-align: right;
@@ -238,11 +279,13 @@
       }
 
       .intro h2,
+      .template-links h2,
       .bottom-line h2 {
         font-size: 1.1rem;
       }
 
       .intro p,
+      .template-links p,
       .card p,
       .bottom-line p {
         font-size: 0.95rem;
@@ -275,6 +318,20 @@
         padding: 16px 18px;
       }
 
+      .template-links {
+        margin-top: 20px;
+        padding: 16px 18px;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      .template-button {
+        text-align: center;
+        width: 100%;
+      }
+
       .footer {
         text-align: left;
         font-size: 0.75rem;
@@ -293,6 +350,7 @@
 
       .card,
       .intro,
+      .template-links,
       .bottom-line {
         box-shadow: none;
       }
@@ -406,6 +464,23 @@
         <p>
           Use Moodle as the reliable home base for course information, expectations, grades, materials, and updates. The CAS template is available as a starting point, but the baseline expectations apply to every course.
         </p>
+      </section>
+
+      <section class="template-links">
+        <h2>CAS Moodle Template</h2>
+        <p>
+          Faculty may use the CAS Moodle Template as a starting point for building a course that meets these expectations. Two versions are available: a tutorial version with faculty notes and a clean version with only the course elements.
+        </p>
+
+        <div class="button-row">
+          <a href="https://courses.mvnu.edu/course/view.php?id=16493" target="_blank" rel="noopener noreferrer" class="template-button">
+            Open Clean Template
+          </a>
+
+          <a href="https://courses.mvnu.edu/course/view.php?id=16471" target="_blank" rel="noopener noreferrer" class="template-button">
+            Open Tutorial Template
+          </a>
+        </div>
       </section>
 
       <p class="footer">
