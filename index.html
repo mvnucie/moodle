@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MVNU Moodle Help Center</title>
+
+  <title>MVNU Moodle &amp; Teaching Resource Center</title>
 
   <style>
     :root {
@@ -18,18 +19,31 @@
       --text: #263f63;
       --border: rgba(0, 40, 85, 0.14);
       --shadow: 0 10px 30px rgba(0, 40, 85, 0.16);
+      --card-shadow: 0 8px 24px rgba(0, 40, 85, 0.1);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: DIN, "Arial Narrow", Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(0, 169, 224, 0.14), transparent 34rem),
-        radial-gradient(circle at bottom left, rgba(241, 196, 0, 0.12), transparent 30rem),
+        radial-gradient(
+          circle at top right,
+          rgba(0, 169, 224, 0.14),
+          transparent 34rem
+        ),
+        radial-gradient(
+          circle at bottom left,
+          rgba(241, 196, 0, 0.12),
+          transparent 30rem
+        ),
         #ffffff;
       color: var(--unity);
       line-height: 1.5;
@@ -44,6 +58,8 @@
       display: flex;
       flex-direction: column;
     }
+
+    /* Top navigation */
 
     .top-bar {
       width: 100%;
@@ -87,6 +103,8 @@
       border-bottom-color: var(--explore);
     }
 
+    /* Main layout */
+
     main {
       flex: 1;
       width: 100%;
@@ -98,14 +116,22 @@
       padding: 2rem 1.25rem 3rem;
     }
 
+    /* Hero */
+
     .hero {
       position: relative;
       overflow: hidden;
       border-radius: 28px;
-      background: linear-gradient(135deg, var(--unity) 0%, var(--explore-dark) 58%, var(--explore) 100%);
+      background:
+        linear-gradient(
+          135deg,
+          var(--unity) 0%,
+          var(--explore-dark) 58%,
+          var(--explore) 100%
+        );
       padding: clamp(2.25rem, 5vw, 4.75rem);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .hero::before {
@@ -132,7 +158,7 @@
 
     .hero-content {
       position: relative;
-      max-width: 820px;
+      max-width: 860px;
       z-index: 1;
     }
 
@@ -151,8 +177,8 @@
 
     h1 {
       color: var(--white);
-      font-size: clamp(2.4rem, 6vw, 4.8rem);
-      line-height: 0.98;
+      font-size: clamp(2.35rem, 5.5vw, 4.6rem);
+      line-height: 1;
       margin: 0 0 1rem;
       font-weight: 900;
       letter-spacing: -0.04em;
@@ -162,27 +188,62 @@
       color: var(--white);
       font-size: clamp(1.05rem, 2vw, 1.25rem);
       line-height: 1.6;
-      max-width: 760px;
+      max-width: 780px;
       margin: 0;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
+    /* Section headings */
+
+    .resource-section {
+      margin-bottom: 2.75rem;
+      scroll-margin-top: 1.5rem;
     }
 
-    .card {
+    .section-heading {
+      margin-bottom: 1.25rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      color: var(--explore-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-heading h2 {
+      color: var(--unity);
+      font-size: clamp(1.85rem, 4vw, 2.65rem);
+      line-height: 1.1;
+      margin: 0 0 0.55rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+    }
+
+    .section-heading p {
+      color: var(--text);
+      max-width: 820px;
+      margin: 0;
+      font-size: 1.04rem;
+      line-height: 1.65;
+    }
+
+    /* Resource cards */
+
+    .resource-card {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 40, 85, 0.1);
-      transition: transform 160ms ease, box-shadow 160ms ease;
+      box-shadow: var(--card-shadow);
+      transition:
+        transform 160ms ease,
+        box-shadow 160ms ease;
     }
 
-    .card:hover {
+    .resource-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 14px 36px rgba(0, 40, 85, 0.16);
     }
@@ -200,56 +261,72 @@
     }
 
     .card-body {
-      padding: 2rem;
+      padding: 1.8rem;
     }
 
-    .icon-badge {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
+    .student-card .card-body {
+      padding: clamp(1.75rem, 4vw, 2.5rem);
+      max-width: 900px;
+    }
+
+    .faculty-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.35rem;
+    }
+
+    .faculty-grid .resource-card {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.1rem;
-      font-size: 1.7rem;
+      flex-direction: column;
     }
 
-    .icon-badge.student {
-      background: rgba(0, 169, 224, 0.12);
+    .faculty-grid .card-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
-    .icon-badge.faculty {
-      background: rgba(4, 106, 56, 0.12);
-    }
-
-    h2 {
-      font-size: clamp(1.6rem, 3vw, 2rem);
-      line-height: 1.1;
-      margin: 0 0 0.75rem;
+    .resource-card h3 {
       color: var(--unity);
+      font-size: 1.45rem;
+      line-height: 1.18;
+      margin: 0 0 0.7rem;
       font-weight: 900;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.015em;
     }
 
-    .card p {
+    .student-card h3 {
+      font-size: clamp(1.65rem, 3vw, 2.15rem);
+    }
+
+    .resource-card p {
       color: var(--text);
-      margin: 0 0 1.5rem;
+      margin: 0 0 1.4rem;
       font-size: 1rem;
       line-height: 1.65;
     }
+
+    .faculty-grid .resource-card p {
+      flex: 1;
+    }
+
+    /* Buttons */
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
+      align-self: flex-start;
+      gap: 0.4rem;
       text-decoration: none;
       font-weight: 900;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.035em;
       text-transform: uppercase;
       padding: 0.85rem 1.1rem;
       border-radius: 12px;
-      transition: transform 140ms ease, filter 140ms ease;
+      transition:
+        transform 140ms ease,
+        filter 140ms ease;
     }
 
     .button:hover,
@@ -270,6 +347,29 @@
       box-shadow: 0 4px 14px rgba(4, 106, 56, 0.24);
     }
 
+    .button-arrow {
+      font-size: 1.1em;
+      line-height: 1;
+    }
+
+    /* Faculty access note */
+
+    .faculty-note {
+      margin-top: 1.25rem;
+      padding: 1rem 1.15rem;
+      border-left: 5px solid var(--purpose);
+      border-radius: 10px;
+      background: rgba(4, 106, 56, 0.07);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .faculty-note strong {
+      color: var(--purpose-dark);
+    }
+
+    /* Support section */
+
     .support {
       border-radius: 24px;
       background: var(--unity);
@@ -280,7 +380,11 @@
 
     .support h2 {
       color: var(--white);
-      margin-bottom: 0.7rem;
+      font-size: clamp(1.65rem, 3vw, 2.1rem);
+      line-height: 1.15;
+      margin: 0 0 0.7rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
     }
 
     .support p {
@@ -302,6 +406,15 @@
       font-weight: 900;
       padding: 0.85rem 1rem;
       border-radius: 12px;
+      transition:
+        transform 140ms ease,
+        filter 140ms ease;
+    }
+
+    .contact-button:hover,
+    .contact-button:focus {
+      transform: translateY(-1px);
+      filter: brightness(0.96);
     }
 
     .contact-button.helpdesk {
@@ -314,6 +427,8 @@
       color: var(--unity);
     }
 
+    /* Footer */
+
     footer {
       padding: 1.25rem;
       text-align: center;
@@ -321,25 +436,18 @@
       font-size: 0.9rem;
     }
 
-    footer a {
-      color: var(--unity);
-      font-weight: 800;
-      text-decoration: none;
-    }
+    /* Responsive layout */
 
-    footer a:hover,
-    footer a:focus {
-      text-decoration: underline;
+    @media (max-width: 920px) {
+      .faculty-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 760px) {
       .top-bar-inner {
         align-items: flex-start;
         flex-direction: column;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
       }
 
       .hero {
@@ -350,102 +458,282 @@
       .support {
         padding: 1.5rem;
       }
+
+      .contact-buttons {
+        flex-direction: column;
+      }
+
+      .contact-button {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .resource-card,
+      .button,
+      .contact-button {
+        transition: none;
+      }
     }
   </style>
 </head>
 
 <body>
-  <script>
-    const STUDENT_HELP_URL = "https://courses.mvnu.edu/course/view.php?id=16511";
-    const FACULTY_HELP_URL = "https://courses.mvnu.edu/course/view.php?id=16512";
-
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll("[data-student-link]").forEach(function (link) {
-        link.href = STUDENT_HELP_URL;
-      });
-
-      document.querySelectorAll("[data-faculty-link]").forEach(function (link) {
-        link.href = FACULTY_HELP_URL;
-      });
-    });
-  </script>
-
   <div class="page">
+
     <header class="top-bar">
       <div class="top-bar-inner">
-        <div class="brand-label">Mount Vernon Nazarene University</div>
-        <nav class="top-links" aria-label="Quick links">
-          <a data-student-link href="#">Student Help</a>
-          <a data-faculty-link href="#">Faculty Help</a>
+
+        <div class="brand-label">
+          Mount Vernon Nazarene University
+        </div>
+
+        <nav class="top-links" aria-label="Resource center navigation">
+          <a href="#student-resources">Student Resources</a>
+          <a href="#faculty-resources">Faculty Resources</a>
           <a href="mailto:cie@mvnu.edu">Contact CIE</a>
         </nav>
+
       </div>
     </header>
 
     <main>
       <div class="container">
+
         <section class="hero" aria-labelledby="page-title">
           <div class="hero-content">
-            <div class="eyebrow">MVNU Moodle Support</div>
-            <h1 id="page-title">Moodle Help Center</h1>
+
+            <div class="eyebrow">
+              MVNU Instructional Support
+            </div>
+
+            <h1 id="page-title">
+              Moodle &amp; Teaching Resource Center
+            </h1>
+
             <p>
-              Find Moodle support resources for students and instructors. Choose the section below that matches the help you need.
+              Find Moodle guidance, teaching resources, and instructional
+              support for MVNU students and faculty. Select the section below
+              that best matches your role and the help you need.
             </p>
+
           </div>
         </section>
 
-        <section class="cards" aria-label="Moodle help options">
-          <article class="card">
-            <div class="card-accent student"></div>
-            <div class="card-body">
-              <div class="icon-badge student" aria-hidden="true">🎓</div>
-              <h2>Student Moodle Help</h2>
-              <p>
-                Guides for submitting assignments, taking quizzes, posting in forums, checking grades, viewing feedback, and resolving common Moodle issues.
-              </p>
-              <a data-student-link href="#" class="button student">
-                Go to Student Help
-              </a>
-            </div>
-          </article>
+        <!-- Student resources -->
 
-          <article class="card">
-            <div class="card-accent faculty"></div>
-            <div class="card-body">
-              <div class="icon-badge faculty" aria-hidden="true">📘</div>
-              <h2>Faculty Moodle Help</h2>
-              <p>
-                Resources for building and managing Moodle courses, including assignments, quizzes, forums, Turnitin, Respondus, gradebook setup, and recommended course practices.
-              </p>
-              <a data-faculty-link href="#" class="button faculty">
-                Go to Faculty Help
-              </a>
+        <section
+          class="resource-section"
+          id="student-resources"
+          aria-labelledby="student-heading"
+        >
+          <div class="section-heading">
+
+            <div class="section-label">
+              For Students
             </div>
+
+            <h2 id="student-heading">
+              Student Moodle Resources
+            </h2>
+
+            <p>
+              Learn how to navigate Moodle, complete course activities, find
+              grades and feedback, and resolve common questions.
+            </p>
+
+          </div>
+
+          <article class="resource-card student-card">
+
+            <div class="card-accent student"></div>
+
+            <div class="card-body">
+
+              <h3>Moodle Basics for Students</h3>
+
+              <p>
+                Step-by-step guidance for finding course content, submitting
+                assignments, taking quizzes, participating in discussions,
+                checking grades, viewing instructor feedback, and using other
+                common Moodle features.
+              </p>
+
+              <a
+                href="https://mvnucie.github.io/moodle/"
+                class="button student"
+              >
+                Open Student Resources
+                <span class="button-arrow" aria-hidden="true">›</span>
+              </a>
+
+            </div>
+
           </article>
         </section>
 
+        <!-- Faculty resources -->
+
+        <section
+          class="resource-section"
+          id="faculty-resources"
+          aria-labelledby="faculty-heading"
+        >
+          <div class="section-heading">
+
+            <div class="section-label">
+              For Faculty and Adjuncts
+            </div>
+
+            <h2 id="faculty-heading">
+              Faculty Teaching Resources
+            </h2>
+
+            <p>
+              Access faculty orientation materials, practical Moodle
+              instructions, and answers to common instructional technology
+              questions.
+            </p>
+
+          </div>
+
+          <div class="faculty-grid">
+
+            <article class="resource-card">
+              <div class="card-accent faculty"></div>
+
+              <div class="card-body">
+
+                <h3>
+                  CAS Faculty Orientation and Teaching Resources
+                </h3>
+
+                <p>
+                  Institutional guidance and resources for new and continuing
+                  CAS faculty, including teaching responsibilities, academic
+                  processes, policies, student support, and instructional
+                  expectations.
+                </p>
+
+                <a
+                  href="https://mvnucie.github.io/moodle/"
+                  class="button faculty"
+                >
+                  Open Faculty Orientation
+                  <span class="button-arrow" aria-hidden="true">›</span>
+                </a>
+
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="card-accent faculty"></div>
+
+              <div class="card-body">
+
+                <h3>
+                  Moodle Quick Start for Instructors
+                </h3>
+
+                <p>
+                  Follow practical, step-by-step directions for preparing,
+                  organizing, and managing a Moodle course before students
+                  begin class.
+                </p>
+
+                <a
+                  href="https://mvnucie.github.io/moodle/"
+                  class="button faculty"
+                >
+                  Open Moodle Quick Start
+                  <span class="button-arrow" aria-hidden="true">›</span>
+                </a>
+
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="card-accent faculty"></div>
+
+              <div class="card-body">
+
+                <h3>Moodle FAQ</h3>
+
+                <p>
+                  Find answers to common questions about Moodle course setup,
+                  assignments, discussions, quizzes, grades, student access,
+                  instructional tools, and troubleshooting.
+                </p>
+
+                <a
+                  href="https://mvnucie.github.io/moodle/"
+                  class="button faculty"
+                >
+                  Browse the Moodle FAQ
+                  <span class="button-arrow" aria-hidden="true">›</span>
+                </a>
+
+              </div>
+            </article>
+
+          </div>
+
+          <div class="faculty-note" role="note">
+            <strong>Faculty access:</strong>
+            These resources are available only to authorized MVNU faculty and
+            adjuncts. Sign in to Moodle with your MVNU account when prompted.
+          </div>
+
+        </section>
+
+        <!-- Additional support -->
+
         <section class="support" aria-labelledby="support-title">
-          <h2 id="support-title">Need more help?</h2>
+
+          <h2 id="support-title">
+            Need more help?
+          </h2>
+
           <p>
-            For login, password, access, or device-related issues, contact the Helpdesk. For Moodle course setup, instructional design, grading workflows, or teaching-related Moodle questions, contact the Center for Innovative Education.
+            For login, password, account access, or device-related issues,
+            contact the Helpdesk. For Moodle course setup, instructional
+            design, grading workflows, instructional technology, or
+            teaching-related Moodle questions, contact the Center for
+            Innovative Education.
           </p>
 
           <div class="contact-buttons">
-            <a class="contact-button helpdesk" href="mailto:motherboard@mvnu.edu">
+
+            <a
+              class="contact-button helpdesk"
+              href="mailto:motherboard@mvnu.edu"
+            >
               Helpdesk: motherboard@mvnu.edu
             </a>
 
-            <a class="contact-button cie" href="mailto:cie@mvnu.edu">
+            <a
+              class="contact-button cie"
+              href="mailto:cie@mvnu.edu"
+            >
               CIE: cie@mvnu.edu
             </a>
+
           </div>
+
         </section>
+
       </div>
     </main>
 
     <footer>
-      <span>Mount Vernon Nazarene University Moodle Help Center</span>
+      Mount Vernon Nazarene University Moodle &amp; Teaching Resource Center
     </footer>
+
   </div>
 </body>
 </html>
