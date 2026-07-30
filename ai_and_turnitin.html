@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Turnitin &amp; AI Guidance for Faculty | MVNU</title>
+
+  <style>
+    :root {
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --explore: #00a9e0;
+      --explore-dark: #005570;
+      --purpose: #046a38;
+      --purpose-dark: #02351c;
+      --drive: #f1c400;
+      --white: #ffffff;
+      --text: #263f63;
+      --muted: #526984;
+      --surface: #f7fafe;
+      --border: rgba(0, 40, 85, 0.14);
+      --shadow: 0 10px 30px rgba(0, 40, 85, 0.16);
+      --card-shadow: 0 8px 24px rgba(0, 40, 85, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: DIN, "Arial Narrow", Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(0, 169, 224, 0.14),
+          transparent 34rem
+        ),
+        radial-gradient(
+          circle at bottom left,
+          rgba(241, 196, 0, 0.12),
+          transparent 30rem
+        ),
+        var(--white);
+      color: var(--unity);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -5rem;
+      z-index: 100;
+      background: var(--white);
+      color: var(--unity);
+      font-weight: 800;
+      padding: 0.75rem 1rem;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top navigation */
+
+    .top-bar {
+      width: 100%;
+      background: var(--unity);
+      color: var(--white);
+      padding: 0.75rem 1.25rem;
+    }
+
+    .top-bar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-label {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .top-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 2px solid transparent;
+    }
+
+    .top-links a:hover,
+    .top-links a:focus {
+      border-bottom-color: var(--explore);
+    }
+
+    /* Main layout */
+
+    main {
+      flex: 1;
+      width: 100%;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    /* Hero */
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          135deg,
+          var(--unity) 0%,
+          var(--explore-dark) 58%,
+          var(--explore) 100%
+        );
+      padding: clamp(2.25rem, 5vw, 4.75rem);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -5rem;
+      top: -5rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: 8rem;
+      bottom: -6rem;
+      width: 15rem;
+      height: 15rem;
+      border-radius: 50%;
+      background: rgba(241, 196, 0, 0.18);
+    }
+
+    .hero-content {
+      position: relative;
+      max-width: 880px;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: var(--drive);
+      color: var(--unity);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      color: var(--white);
+      font-size: clamp(2.3rem, 5.5vw, 4.45rem);
+      line-height: 1;
+      margin: 0 0 1rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      color: var(--white);
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0;
+    }
+
+    /* Introductory guidance */
+
+    .guidance {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2.75rem;
+    }
+
+    .guidance-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.4rem 1.5rem;
+    }
+
+    .guidance-panel.important {
+      border-left: 6px solid var(--drive);
+      background: rgba(241, 196, 0, 0.10);
+    }
+
+    .guidance-panel.access {
+      border-left: 6px solid var(--purpose);
+      background: rgba(4, 106, 56, 0.07);
+    }
+
+    .guidance-panel h2 {
+      color: var(--unity);
+      font-size: 1.2rem;
+      line-height: 1.2;
+      margin: 0 0 0.45rem;
+      font-weight: 900;
+    }
+
+    .guidance-panel p {
+      color: var(--text);
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .guidance-panel a {
+      color: var(--purpose-dark);
+      font-weight: 800;
+    }
+
+    /* Resource section */
+
+    .resource-section {
+      scroll-margin-top: 1.5rem;
+      margin-bottom: 2.75rem;
+    }
+
+    .section-heading {
+      margin-bottom: 1.35rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      color: var(--explore-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-heading h2 {
+      color: var(--unity);
+      font-size: clamp(1.85rem, 4vw, 2.65rem);
+      line-height: 1.1;
+      margin: 0 0 0.55rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+    }
+
+    .section-heading p {
+      color: var(--text);
+      max-width: 850px;
+      margin: 0;
+      font-size: 1.04rem;
+      line-height: 1.65;
+    }
+
+    /* Resource cards */
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.35rem;
+    }
+
+    .resource-card {
+      --accent: var(--explore);
+      --button-bg: var(--unity);
+      --button-color: var(--white);
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition:
+        transform 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(0, 40, 85, 0.16);
+    }
+
+    .resource-card.similarity {
+      --accent: var(--explore);
+      --button-bg: var(--explore-dark);
+    }
+
+    .resource-card.ai-writing {
+      --accent: var(--purpose);
+      --button-bg: var(--purpose);
+    }
+
+    .resource-card.grammarly {
+      --accent: var(--drive);
+      --button-bg: var(--drive);
+      --button-color: var(--unity-dark);
+    }
+
+    .resource-card.expectations {
+      --accent: var(--unity);
+      --button-bg: var(--unity);
+    }
+
+    .card-accent {
+      height: 9px;
+      background: var(--accent);
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: clamp(1.55rem, 3vw, 2rem);
+    }
+
+    .card-label {
+      align-self: flex-start;
+      color: var(--explore-dark);
+      background: rgba(0, 169, 224, 0.11);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.38rem 0.62rem;
+      border-radius: 999px;
+      margin-bottom: 0.85rem;
+    }
+
+    .ai-writing .card-label {
+      color: var(--purpose-dark);
+      background: rgba(4, 106, 56, 0.10);
+    }
+
+    .grammarly .card-label {
+      color: var(--unity-dark);
+      background: rgba(241, 196, 0, 0.18);
+    }
+
+    .expectations .card-label {
+      color: var(--unity);
+      background: rgba(0, 40, 85, 0.09);
+    }
+
+    .resource-card h3 {
+      color: var(--unity);
+      font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+      line-height: 1.18;
+      margin: 0 0 0.75rem;
+      font-weight: 900;
+      letter-spacing: -0.015em;
+    }
+
+    .resource-card p {
+      flex: 1;
+      color: var(--text);
+      margin: 0 0 1.45rem;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    /* Buttons */
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      align-self: flex-start;
+      gap: 0.4rem;
+      background: var(--button-bg);
+      color: var(--button-color);
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+      padding: 0.85rem 1.1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0, 40, 85, 0.18);
+      transition:
+        transform 140ms ease,
+        filter 140ms ease;
+    }
+
+    .button:hover,
+    .button:focus {
+      transform: translateY(-1px);
+      filter: brightness(0.96);
+    }
+
+    .button:focus-visible,
+    .top-links a:focus-visible,
+    .support p a:focus-visible,
+    .contact-button:focus-visible {
+      outline: 3px solid var(--drive);
+      outline-offset: 3px;
+    }
+
+    .button-arrow {
+      font-size: 1.1em;
+      line-height: 1;
+    }
+
+    /* Support section */
+
+    .support {
+      border-radius: 24px;
+      background: var(--unity);
+      color: var(--white);
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 40, 85, 0.16);
+    }
+
+    .support h2 {
+      color: var(--white);
+      font-size: clamp(1.65rem, 3vw, 2.1rem);
+      line-height: 1.15;
+      margin: 0 0 0.7rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .support p {
+      color: var(--white);
+      margin: 0 0 1.25rem;
+      max-width: 980px;
+      line-height: 1.65;
+    }
+
+    .support p a {
+      color: var(--white);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .contact-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+    }
+
+    .contact-button {
+      display: inline-block;
+      background: var(--explore);
+      color: var(--unity);
+      text-decoration: none;
+      font-weight: 900;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      transition:
+        transform 140ms ease,
+        filter 140ms ease;
+    }
+
+    .contact-button:hover,
+    .contact-button:focus {
+      transform: translateY(-1px);
+      filter: brightness(0.96);
+    }
+
+    /* Footer */
+
+    footer {
+      padding: 1.25rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive layout */
+
+    @media (max-width: 820px) {
+      .guidance,
+      .resource-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .top-bar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero {
+        border-radius: 20px;
+      }
+
+      .card-body,
+      .support {
+        padding: 1.5rem;
+      }
+
+      .contact-buttons {
+        flex-direction: column;
+      }
+
+      .contact-button {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .resource-card,
+      .button,
+      .contact-button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="page">
+
+    <header class="top-bar">
+      <div class="top-bar-inner">
+
+        <div class="brand-label">
+          Mount Vernon Nazarene University
+        </div>
+
+        <nav class="top-links" aria-label="Page navigation">
+          <a href="#resources">Faculty Resources</a>
+          <a href="#support">Contact CIE</a>
+        </nav>
+
+      </div>
+    </header>
+
+    <main id="main-content">
+      <div class="container">
+
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-content">
+
+            <div class="eyebrow">
+              For All MVNU Faculty and Adjuncts
+            </div>
+
+            <h1 id="page-title">
+              Turnitin &amp; AI Guidance for Faculty
+            </h1>
+
+            <p>
+              Find practical guidance for interpreting Turnitin reports,
+              understanding AI-supported writing tools, responding fairly when
+              concerns arise, and setting clear expectations for student use of
+              artificial intelligence.
+            </p>
+
+          </div>
+        </section>
+
+        <section
+          class="guidance"
+          aria-label="Important guidance and access information"
+        >
+
+          <div class="guidance-panel important" role="note">
+            <h2>Turnitin supports review; it does not make the decision.</h2>
+
+            <p>
+              A Similarity score or AI writing indicator should not be treated
+              as automatic proof of academic misconduct. Review the report in
+              context, consider the expectations students received, and follow
+              <a
+                href="https://mvnu.smartcatalogiq.com/en/2026-2027/mvnu-college-of-arts-and-sciences-catalog-2026-2027/academic-regulations-and-procedures-traditional/academic-integrity"
+                target="_blank"
+                rel="noopener noreferrer"
+              >MVNU's Academic Integrity Policy</a> when concerns remain.
+            </p>
+          </div>
+
+          <div class="guidance-panel access" role="note">
+            <h2>Moodle access</h2>
+
+            <p>
+              Sign in to Moodle before opening a resource. These pages are
+              available through guest access, so no course enrollment or
+              enrollment key is required.
+            </p>
+          </div>
+
+        </section>
+
+        <section
+          class="resource-section"
+          id="resources"
+          aria-labelledby="resources-heading"
+        >
+          <div class="section-heading">
+
+            <div class="section-label">
+              Choose the Help You Need
+            </div>
+
+            <h2 id="resources-heading">
+              Turnitin and AI Faculty Resources
+            </h2>
+
+            <p>
+              Select the situation that best matches the question or concern
+              you are addressing.
+            </p>
+
+          </div>
+
+          <div class="resource-grid">
+
+            <article class="resource-card similarity">
+              <div class="card-accent"></div>
+
+              <div class="card-body">
+                <div class="card-label">Interpret the Report</div>
+
+                <h3>Understanding Turnitin Similarity Reports</h3>
+
+                <p>
+                  Use this resource when you need help interpreting similarity
+                  scores, reviewing matched text and sources, or understanding
+                  filters and exclusions.
+                </p>
+
+                <a
+                  href="https://courses.mvnu.edu/mod/page/view.php?id=1008767"
+                  class="button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Similarity Guidance
+                  <span class="button-arrow" aria-hidden="true">&rsaquo;</span>
+                </a>
+              </div>
+            </article>
+
+            <article class="resource-card ai-writing">
+              <div class="card-accent"></div>
+
+              <div class="card-body">
+                <div class="card-label">Respond to an Indicator</div>
+
+                <h3>Understanding Turnitin AI Writing Indicators</h3>
+
+                <p>
+                  Use this resource when a Turnitin AI writing indicator
+                  appears and you need to understand what it can and cannot
+                  tell you, what to review, and how to respond.
+                </p>
+
+                <a
+                  href="https://courses.mvnu.edu/mod/page/view.php?id=1008768"
+                  class="button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open AI Indicator Guidance
+                  <span class="button-arrow" aria-hidden="true">&rsaquo;</span>
+                </a>
+              </div>
+            </article>
+
+            <article class="resource-card grammarly">
+              <div class="card-accent"></div>
+
+              <div class="card-body">
+                <div class="card-label">Understand Writing Tools</div>
+
+                <h3>Grammarly, AI Tools, and Student Writing</h3>
+
+                <p>
+                  Use this resource to distinguish ordinary proofreading and
+                  writing assistance from generative, rewriting, paraphrasing,
+                  or other substantive AI-supported writing.
+                </p>
+
+                <a
+                  href="https://courses.mvnu.edu/mod/page/view.php?id=1008769"
+                  class="button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Writing Tool Guidance
+                  <span class="button-arrow" aria-hidden="true">&rsaquo;</span>
+                </a>
+              </div>
+            </article>
+
+            <article class="resource-card expectations">
+              <div class="card-accent"></div>
+
+              <div class="card-body">
+                <div class="card-label">Prepare Your Course</div>
+
+                <h3>Setting AI Expectations in Your Course</h3>
+
+                <p>
+                  Use this resource when developing syllabus language,
+                  assignment instructions, AI-use disclosure requirements, or
+                  process-based assignments that make student learning visible.
+                </p>
+
+                <a
+                  href="https://courses.mvnu.edu/mod/page/view.php?id=1008770"
+                  class="button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Expectations Guidance
+                  <span class="button-arrow" aria-hidden="true">&rsaquo;</span>
+                </a>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <section
+          class="support"
+          id="support"
+          aria-labelledby="support-title"
+        >
+
+          <h2 id="support-title">Need help applying this guidance?</h2>
+
+          <p>
+            Contact the Center for Innovative Education for assistance with
+            Turnitin, Moodle, instructional technology, AI expectations, or
+            teaching-related questions. For formal academic-integrity concerns,
+            consult
+            <a
+              href="https://mvnu.smartcatalogiq.com/en/2026-2027/mvnu-college-of-arts-and-sciences-catalog-2026-2027/academic-regulations-and-procedures-traditional/academic-integrity"
+              target="_blank"
+              rel="noopener noreferrer"
+            >MVNU's Academic Integrity Policy</a> and your college dean.
+          </p>
+
+          <div class="contact-buttons">
+            <a class="contact-button" href="mailto:cie@mvnu.edu">
+              CIE: cie@mvnu.edu
+            </a>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+    <footer>
+      Mount Vernon Nazarene University &middot; Turnitin &amp; AI Guidance for Faculty
+    </footer>
+
+  </div>
+</body>
+</html>
