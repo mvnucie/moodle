@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Instructions for MVNU faculty importing activities, resources, sections, and settings from a previous Moodle course.">
+  <title>Importing Content from a Previous Moodle Course | MVNU CIE</title>
+  <style>
+    :root {
+      /* MVNU brand palette: Unity, Purpose, Expand, Drive, and Explore */
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --purpose: #ffffff;
+      --expand: #00a9e0;
+      --expand-dark: #005570;
+      --drive: #046a38;
+      --drive-dark: #02351c;
+      --explore: #f1c400;
+      --belong: #5cb8b2;
+      --ink: #002855;
+      --muted: #486174;
+      --line: #cfdbe4;
+      --paper: #ffffff;
+      --page: #f2f7fa;
+      --warning-bg: #fff9dc;
+      --warning-line: #f1c400;
+      --shadow: 0 12px 32px rgba(0, 40, 85, 0.1);
+      --radius: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.25rem;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--expand-dark);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.16em;
+    }
+
+    a:hover {
+      color: var(--drive);
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--explore);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 100;
+      padding: 0.65rem 0.9rem;
+      color: var(--unity);
+      background: #fff;
+      border: 2px solid var(--explore);
+      border-radius: 6px;
+      transform: translateY(-150%);
+      transition: transform 0.15s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 25px, rgba(0, 169, 224, 0.12) 25px 26px),
+        var(--unity);
+      border-bottom: 6px solid var(--expand);
+    }
+
+    .site-header::after {
+      content: ">>>";
+      position: absolute;
+      right: clamp(1rem, 6vw, 5rem);
+      bottom: clamp(0.25rem, 2vw, 1.25rem);
+      color: var(--expand);
+      font-family: Arial, sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      font-weight: 900;
+      letter-spacing: -0.2em;
+      line-height: 1;
+      opacity: 0.18;
+      transform: scaleX(0.72);
+      transform-origin: right center;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(2.75rem, 7vw, 5rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.7rem;
+      color: var(--expand);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--unity);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-weight: 750;
+      line-height: 1.18;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2.2rem, 5vw, 4.25rem);
+      letter-spacing: -0.025em;
+    }
+
+    .lede {
+      max-width: 760px;
+      margin: 1.25rem 0 0;
+      color: #ffffff;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 2rem;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 2rem auto 4rem;
+      align-items: start;
+    }
+
+    main {
+      min-width: 0;
+      padding: clamp(1.35rem, 4vw, 3.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--expand);
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 40, 85, 0.07);
+    }
+
+    .toc h2 {
+      margin: 0 0 0.65rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc li + li {
+      margin-top: 0.4rem;
+    }
+
+    .toc a {
+      color: var(--ink);
+      font-size: 0.93rem;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    section + section {
+      margin-top: 3.25rem;
+      padding-top: 0.25rem;
+    }
+
+    h2 {
+      margin: 0 0 1.1rem;
+      padding-bottom: 0.55rem;
+      font-size: clamp(1.65rem, 3vw, 2.25rem);
+      border-bottom: 2px solid var(--line);
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      width: 4rem;
+      margin-bottom: -0.65rem;
+      padding-top: 0.55rem;
+      border-bottom: 4px solid var(--expand);
+    }
+
+    h3 {
+      margin: 2rem 0 0.6rem;
+      font-size: clamp(1.22rem, 2.2vw, 1.52rem);
+    }
+
+    p {
+      margin: 0.7rem 0 1rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4rem;
+    }
+
+    li + li {
+      margin-top: 0.35rem;
+    }
+
+    strong {
+      color: var(--unity);
+    }
+
+    .callout {
+      margin: 1.5rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--warning-bg);
+      border-left: 5px solid var(--warning-line);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quick-note {
+      padding: 1.1rem 1.2rem;
+      background: #e5f6fc;
+      border: 1px solid #a6dff2;
+      border-radius: 9px;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 1.3rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.4rem 1.35rem 1.5rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      counter-increment: steps;
+    }
+
+    .step::before {
+      content: counter(steps);
+      position: absolute;
+      top: 1.15rem;
+      left: 1.15rem;
+      display: grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      color: var(--unity);
+      background: var(--expand);
+      border-radius: 50%;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .step h3 {
+      margin: 0 0 0.7rem 3rem;
+      min-height: 2.25rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .path,
+    code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .menu-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.3rem 0;
+      padding: 0.45rem 0.7rem;
+      color: var(--unity);
+      background: #eef8f7;
+      border: 1px solid #b9dcda;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    figure.screenshot {
+      margin: 1.3rem 0 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #cbd7dd;
+      border-radius: 10px;
+    }
+
+    .screenshot-media {
+      background: #eef3f5;
+    }
+
+    figure.screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figure.screenshot img[hidden] {
+      display: none;
+    }
+
+    .image-placeholder {
+      display: grid;
+      min-height: clamp(220px, 38vw, 410px);
+      padding: 2rem;
+      place-items: center;
+      color: #4d606c;
+      background:
+        linear-gradient(135deg, rgba(0, 40, 85, 0.04) 25%, transparent 25%) 0 0 / 22px 22px,
+        linear-gradient(315deg, rgba(0, 169, 224, 0.05) 25%, transparent 25%) 0 0 / 22px 22px,
+        #eef3f5;
+      text-align: center;
+    }
+
+    figure.screenshot img:not([hidden]) + .image-placeholder {
+      display: none;
+    }
+
+    .placeholder-inner {
+      max-width: 34rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.88);
+      border: 2px dashed #9fb0ba;
+      border-radius: 9px;
+    }
+
+    .placeholder-label {
+      display: block;
+      color: var(--unity);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .placeholder-file {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.88rem;
+      overflow-wrap: anywhere;
+    }
+
+    figcaption {
+      padding: 0.75rem 1rem;
+      color: var(--muted);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .subsection {
+      margin-top: 1.6rem;
+      padding: 1.2rem 1.25rem 1.3rem;
+      background: #fbfcfc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .subsection h3 {
+      margin-top: 0;
+    }
+
+    .issue-box {
+      margin-top: 1.25rem;
+      padding: 1.2rem 1.25rem;
+      background: var(--warning-bg);
+      border: 1px solid #ebd292;
+      border-radius: 10px;
+    }
+
+    .issue-box h3 {
+      margin-top: 0;
+    }
+
+    .contact-box {
+      margin-top: 3.25rem;
+      padding: clamp(1.35rem, 4vw, 2rem);
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 24px, rgba(0, 169, 224, 0.12) 24px 25px),
+        var(--unity);
+      border-top: 6px solid var(--expand);
+      border-radius: 12px;
+    }
+
+    .contact-box h2 {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .contact-box h2::after {
+      border-color: var(--expand);
+    }
+
+    .contact-box a {
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .contact-box strong {
+      color: inherit;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .site-footer {
+      padding: 1.3rem 1rem 2rem;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        grid-row: 1;
+      }
+
+      main {
+        grid-row: 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 0.97rem;
+      }
+
+      .header-inner,
+      .layout {
+        width: min(100% - 1rem, 1120px);
+      }
+
+      .layout {
+        margin-top: 0.5rem;
+        gap: 0.75rem;
+      }
+
+      main,
+      .toc {
+        border-radius: 8px;
+      }
+
+      .step {
+        padding: 1.2rem 1rem 1.3rem;
+      }
+
+      .step::before {
+        left: 0.9rem;
+      }
+
+      .step h3 {
+        margin-left: 2.8rem;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        font-size: 10.5pt;
+      }
+
+      .site-header {
+        color: #000;
+        background: #fff;
+        border-bottom: 3px solid #000;
+      }
+
+      .site-header h1,
+      .site-header .lede,
+      .site-header .eyebrow {
+        color: #000;
+      }
+
+      .header-inner {
+        padding: 1rem 0;
+      }
+
+      .layout {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      main {
+        padding: 1rem 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .toc {
+        display: none;
+      }
+
+      .step,
+      .subsection,
+      .issue-box,
+      figure.screenshot {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .site-footer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">MVNU Center for Innovative Education</p>
+      <h1>Importing Content from a Previous Moodle Course</h1>
+      <p class="lede">Use Moodle's Import feature to copy activities, resources, course sections, and other content from a previous course into a new course site.</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="main-content">
+      <section id="before-you-begin" aria-labelledby="before-heading">
+        <h2 id="before-heading">Before You Begin</h2>
+        <p>Importing course content does <strong>not</strong> bring over students, student submissions, grades, or other student data from the previous course.</p>
+        <p>Start in the <strong>new Moodle course site</strong> into which you want to copy content.</p>
+        <p>Identify the previous Moodle course you want to use as your source. In most cases, this will be the most recent version of the course that contains the content and organization you want to reuse.</p>
+        <aside class="callout" aria-label="Important note">
+          <p><strong>Important:</strong> If you have already imported content into the new course, avoid importing the same content a second time unless you specifically intend to do so. Importing the same material again can create duplicate activities, gradebook items, or course sections.</p>
+        </aside>
+      </section>
+
+      <section id="import" aria-labelledby="import-heading">
+        <h2 id="import-heading">Import Your Course Content</h2>
+
+        <ol class="step-list">
+          <li class="step">
+            <h3>Log in to Moodle</h3>
+            <p>Go to <a href="https://courses.mvnu.edu">courses.mvnu.edu</a>. Then open the <strong>new course site</strong> into which you want to copy content.</p>
+          </li>
+
+          <li class="step">
+            <h3>Open Course Reuse</h3>
+            <p>From the toolbar at the top of the course, select <strong>More</strong> and then <strong>Course reuse</strong>.</p>
+
+            <figure class="screenshot">
+              <div class="screenshot-media">
+                <img src="images/course-reuse.png" alt="The More menu in a Moodle course with Course reuse selected" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the More menu and Course reuse option in Moodle">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot: More → Course reuse</span>
+                    <span class="placeholder-file path">images/course-reuse.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Open the <strong>More</strong> menu and select <strong>Course reuse</strong>.</figcaption>
+            </figure>
+          </li>
+
+          <li class="step">
+            <h3>Select Import</h3>
+            <p>On the Course reuse page, select <strong>Import</strong>.</p>
+            <p>Under <strong>Find a course to import data from</strong>, Moodle will display courses you have taught previously. Locate the course <strong>FROM which</strong> you want to copy your content.</p>
+            <p>If the course is not listed, use the search box. A useful search format is:</p>
+            <p><code>[course number]-[section number].[term]</code></p>
+            <p>For example: <code>BIB-1023-1.2025FA</code></p>
+            <p>If you still cannot find the course you need, open the previous course in Moodle, go to <strong>Settings</strong>, and locate its <strong>Course full name</strong> or <strong>Course short name</strong>. Copy one of those exactly and use it as your search term.</p>
+
+            <figure class="screenshot">
+              <div class="screenshot-media">
+                <img src="images/import-search.png" alt="Moodle Import page showing the list and search field used to find a source course" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing how to find or search for a source course in Moodle">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot: Find or search for the source course</span>
+                    <span class="placeholder-file path">images/import-search.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Use the course list or search field to find the course that contains the content you want to copy.</figcaption>
+            </figure>
+          </li>
+
+          <li class="step">
+            <h3>Select the Correct Source Course</h3>
+            <p>Select the circle next to the course you want to import from, then select <strong>Continue</strong>.</p>
+            <p>Before continuing, make sure you have selected the correct course, section, and semester.</p>
+
+            <figure class="screenshot">
+              <div class="screenshot-media">
+                <img src="images/select-source-course.png" alt="A source course selected on Moodle's Import page with the Continue button available" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing a selected source course and the Continue button in Moodle">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot: Select the source course</span>
+                    <span class="placeholder-file path">images/select-source-course.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Select the correct source course, verify the section and semester, and then select <strong>Continue</strong>.</figcaption>
+            </figure>
+          </li>
+
+          <li class="step">
+            <h3>Choose What You Want to Import</h3>
+            <p>If you want to copy the <strong>entire course</strong>, leave the import settings selected and choose <strong>Jump to final step</strong>.</p>
+            <p>If you only want to copy selected activities, resources, or sections, choose <strong>Next</strong> instead. Moodle will display the contents of the source course so you can select exactly what you want to import.</p>
+
+            <figure class="screenshot">
+              <div class="screenshot-media">
+                <img src="images/import-settings.png" alt="Moodle Import settings page showing the Next and Jump to final step buttons" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing Moodle import settings and the Jump to final step option">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot: Import settings and Jump to final step</span>
+                    <span class="placeholder-file path">images/import-settings.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Choose <strong>Jump to final step</strong> for the entire course or <strong>Next</strong> to select individual content.</figcaption>
+            </figure>
+          </li>
+
+          <li class="step">
+            <h3>Allow Moodle to Complete the Import</h3>
+            <p>Moodle will copy the selected content into your new course.</p>
+            <p>Depending on the size of the course, this can take anywhere from a few seconds to several minutes.</p>
+            <p>When the import is complete, return to your course and review the imported content.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="after-import" aria-labelledby="after-heading">
+        <h2 id="after-heading">After the Import</h2>
+        <p class="quick-note">Importing copies the content and settings from the source course. Review the new course and make any changes needed for the semester you are preparing.</p>
+
+        <div class="subsection" id="dates">
+          <h3>Review and Update Your Dates</h3>
+          <p>Moodle copies the activity dates from the <strong>source course</strong> into the new course.</p>
+          <p>If you are copying a course from a previous semester, those dates <strong>must be updated</strong> for the new semester.</p>
+          <p>If you are copying content between two sections being taught during the same semester, Moodle will copy the dates from the first section. If those same dates apply to the second section, no additional changes are necessary.</p>
+          <p>The easiest way to review and update dates throughout the course is Moodle's <strong>Dates report</strong>:</p>
+          <p><span class="menu-path" aria-label="More, then Reports, then Dates">More → Reports → Dates</span></p>
+          <p>The Dates report displays dates for assignments, quizzes, forums, and other Moodle activities in one place and allows you to <strong>edit those dates directly from the report</strong>. This is much faster than opening and editing each activity individually.</p>
+          <p>Review the full report and update the dates that need to change before students begin working in the course.</p>
+        </div>
+
+        <div class="subsection" id="course-page">
+          <h3>Review the Course Page</h3>
+          <p>Look through each section of the course and make sure:</p>
+          <ul>
+            <li>activities and resources appear where you expect them;</li>
+            <li>nothing was accidentally duplicated;</li>
+            <li>old announcements, instructions, or semester-specific information have been updated;</li>
+            <li>activities students should not yet see are appropriately hidden; and</li>
+            <li>activities you intend students to use are present and accessible.</li>
+          </ul>
+        </div>
+
+        <div class="subsection" id="gradebook">
+          <h3>Review the Gradebook</h3>
+          <p>Go to <strong>Grades → Gradebook setup</strong> and review the organization of the gradebook.</p>
+          <p>Check for:</p>
+          <ul>
+            <li>duplicate grade items;</li>
+            <li>obsolete assignments or categories that are no longer being used;</li>
+            <li>unexpected gradebook items; and</li>
+            <li>point values and category totals that do not match your current course plan.</li>
+          </ul>
+          <p><strong>Reorganize or remove items as needed for your course.</strong></p>
+        </div>
+
+        <div class="subsection" id="external-tools">
+          <h3>Check Publisher and External-Tool Activities</h3>
+          <p>Publisher integrations and other external tools often require additional setup after a course has been imported.</p>
+          <p>If your course uses Connect, Achieve, Aktiv, Lumen, or another publisher or external platform, open the activities you plan to use and confirm that they are connected to the correct course or section for the current semester.</p>
+          <p>If an external activity asks you to select, pair, or link a course, make sure you are connecting it to the <strong>current semester's</strong> publisher course rather than the previous one.</p>
+          <p>If you have questions about anything you see while reviewing the imported course, or would like help with dates, the gradebook, publisher integrations, or general Moodle organization, <a href="mailto:cie@mvnu.edu">contact CIE</a>. We are happy to help.</p>
+        </div>
+      </section>
+
+      <section id="turnitin" aria-labelledby="turnitin-heading">
+        <h2 id="turnitin-heading">If Your Course Uses Turnitin</h2>
+        <p>There are two types of Turnitin activities you may encounter after importing an older course.</p>
+
+        <div class="subsection" id="moodle-assignment-turnitin">
+          <h3>Regular Moodle Assignments with Turnitin Enabled</h3>
+          <p>A regular Moodle Assignment can use Turnitin for Similarity Reports while retaining all of the normal Moodle Assignment features.</p>
+          <p>These assignments import as regular Moodle activities.</p>
+          <p>After importing, use the <strong>Dates report</strong> to update their dates along with the rest of your course, and confirm that the assignments appear where you expect them in the course.</p>
+          <p>Turnitin settings can be found by editing the Moodle Assignment and expanding the <strong>Turnitin plagiarism plugin settings</strong> section.</p>
+        </div>
+
+        <div class="subsection" id="legacy-turnitin">
+          <h3>Legacy Turnitin Assignment 2 Activities</h3>
+          <p>Older Moodle courses may contain activities labeled <strong>Turnitin Assignment 2</strong>.</p>
+          <p>Turnitin Assignment 2 is a legacy activity type. New Turnitin Assignment 2 activities can no longer be created in Moodle, but existing ones can still be brought into a new course through Import.</p>
+          <p>When a Turnitin Assignment 2 activity imports correctly, Moodle creates a new Turnitin assignment for the new course automatically.</p>
+          <p>After importing a course that contains Turnitin Assignment 2 activities:</p>
+          <ol>
+            <li>Locate each Turnitin Assignment 2 activity that you intend to use.</li>
+            <li>Open it and make sure it loads normally.</li>
+            <li>Use the <strong>Dates report</strong> to update its dates for the new semester.</li>
+            <li>Confirm that the assignment appears in the course and is available to students when intended.</li>
+          </ol>
+
+          <div class="issue-box">
+            <h3>If a Turnitin Assignment 2 Activity Does Not Copy Correctly</h3>
+            <p>Some older Turnitin Assignment 2 activities can fail during the import process. This is especially likely with older assignments containing lengthy assignment instructions.</p>
+            <p>Signs of a problem include:</p>
+            <ul>
+              <li>an expected Turnitin Assignment 2 activity is missing from the new course;</li>
+              <li>an assignment appears in the gradebook but there is no corresponding activity on the course page;</li>
+              <li>opening the activity produces a Turnitin or Moodle error; or</li>
+              <li>Turnitin displays a warning that the assignment is connected to another Moodle course or that there is a duplicate assignment.</li>
+            </ul>
+            <p>If you encounter any of these problems, <a href="mailto:cie@mvnu.edu"><strong>contact CIE</strong></a>. We can identify what happened and help determine the best way to repair or replace the activity.</p>
+            <p>In most cases, the best solution for a problematic legacy Turnitin Assignment 2 activity is to replace it with a <strong>regular Moodle Assignment with Turnitin enabled</strong>.</p>
+            <p>You can also choose to replace a working legacy Turnitin Assignment 2 activity with a regular Moodle Assignment whenever it is practical to do so.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="final-check" aria-labelledby="final-heading">
+        <h2 id="final-heading">Final Course Check</h2>
+        <p>Before students begin working in the course, review the site from top to bottom and confirm that:</p>
+        <ul>
+          <li>all required course content imported successfully;</li>
+          <li>activity and assignment dates have been updated;</li>
+          <li>the course sections are organized correctly;</li>
+          <li>the gradebook reflects your current grading plan;</li>
+          <li>Turnitin activities you intend to use are present and working;</li>
+          <li>publisher or external-tool links are connected to the correct current-semester course; and</li>
+          <li>there are no unintended duplicate activities, gradebook items, or sections.</li>
+        </ul>
+        <p>Taking a few minutes to complete this review at the beginning of the semester can prevent problems later once students begin completing and submitting work.</p>
+      </section>
+
+      <section class="contact-box" id="help" aria-labelledby="help-heading">
+        <h2 id="help-heading">Need Help?</h2>
+        <p>If you have trouble importing a course or notice anything unusual afterward, email the <strong>Center for Innovative Education</strong> at <a href="mailto:cie@mvnu.edu">cie@mvnu.edu</a>.</p>
+        <p>We're happy to help with course imports, dates, gradebook organization, Turnitin, publisher integrations, and other Moodle questions.</p>
+      </section>
+    </main>
+
+    <nav class="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <ol>
+        <li><a href="#before-you-begin">Before you begin</a></li>
+        <li><a href="#import">Import course content</a></li>
+        <li><a href="#after-import">After the import</a></li>
+        <li><a href="#turnitin">Turnitin activities</a></li>
+        <li><a href="#final-check">Final course check</a></li>
+        <li><a href="#help">Need help?</a></li>
+      </ol>
+    </nav>
+  </div>
+
+  <footer class="site-footer">
+    <p>Center for Innovative Education · Mount Vernon Nazarene University</p>
+  </footer>
+</body>
+</html>
