@@ -8,3 +8,4 @@ CAS Moodle tutorials
 - [AI and Turnitin](https://mvnucie.github.io/moodle/ai_and_turnitin.html)
 - [Minimum Moodle Expectations](https://mvnucie.github.io/moodle/minimum.html)
 - [Getting Started](https://mvnucie.github.io/moodle/start.html)
+- [Importing Content](https://mvnucie.github.io/moodle/importing-content-from-a-previous-moodle-course.html)
