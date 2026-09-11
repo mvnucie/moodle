@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn how to choose, create, reuse, and grade with rubrics and grading guides in Moodle Assignments.">
+  <title>How do I use rubrics and grading guides in Moodle? | MVNU Moodle FAQ</title>
+  <style>
+    :root {
+      /* MVNU brand palette */
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --purpose: #ffffff;
+      --expand: #00a9e0;
+      --expand-dark: #006b8e;
+      --drive: #046a38;
+      --explore: #f1c400;
+      --ink: #17324a;
+      --muted: #536b7d;
+      --line: #cedae3;
+      --paper: #ffffff;
+      --page: #f2f7fa;
+      --warning-bg: #fff9dc;
+      --warning-line: #f1c400;
+      --soft-blue: #eaf7fc;
+      --soft-teal: #eef8f7;
+      --shadow: 0 12px 32px rgba(0, 40, 85, 0.1);
+      --radius: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.25rem;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--expand-dark);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.16em;
+    }
+
+    a:hover {
+      color: var(--drive);
+    }
+
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--explore);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 100;
+      padding: 0.65rem 0.9rem;
+      color: var(--unity);
+      background: #fff;
+      border: 2px solid var(--explore);
+      border-radius: 6px;
+      transform: translateY(-150%);
+      transition: transform 0.15s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 25px, rgba(0, 169, 224, 0.12) 25px 26px),
+        var(--unity);
+      border-bottom: 6px solid var(--expand);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(1.8rem, 5vw, 3.4rem) 0 clamp(2rem, 5vw, 3.6rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--expand);
+      font-size: 0.82rem;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--unity);
+      font-family: inherit;
+      font-weight: 750;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 940px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2rem, 4.7vw, 3.75rem);
+      letter-spacing: -0.025em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 1.6rem auto 4rem;
+      align-items: start;
+    }
+
+    .toc-enabled .layout {
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
+
+    main {
+      min-width: 0;
+      padding: clamp(1.35rem, 4vw, 3.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.35rem;
+      color: var(--unity);
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .back-link::before {
+      content: "\2190";
+      color: var(--expand-dark);
+      font-size: 1.15em;
+      line-height: 1;
+    }
+
+    .back-link:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    .article-opening {
+      margin: 0 0 1.1rem;
+      font-size: 1.06rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--expand);
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 40, 85, 0.07);
+    }
+
+    .toc[hidden] {
+      display: none;
+    }
+
+    .toc h2 {
+      margin: 0 0 0.65rem;
+      padding: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border: 0;
+    }
+
+    .toc h2::after {
+      display: none;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc li + li {
+      margin-top: 0.4rem;
+    }
+
+    .toc a {
+      color: var(--ink);
+      font-size: 0.93rem;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    section + section {
+      margin-top: 3.25rem;
+      padding-top: 0.25rem;
+    }
+
+    h2 {
+      margin: 0 0 1.1rem;
+      padding-bottom: 0.55rem;
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      border-bottom: 2px solid var(--line);
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      width: 4rem;
+      margin-bottom: -0.65rem;
+      padding-top: 0.55rem;
+      border-bottom: 4px solid var(--expand);
+    }
+
+    h3 {
+      margin: 2rem 0 0.6rem;
+      font-size: clamp(1.2rem, 2.2vw, 1.48rem);
+    }
+
+    p {
+      margin: 0.7rem 0 1rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4rem;
+    }
+
+    li + li {
+      margin-top: 0.35rem;
+    }
+
+    strong {
+      color: var(--unity);
+    }
+
+    .callout {
+      margin: 1.5rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--warning-bg);
+      border-left: 5px solid var(--warning-line);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 1.3rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.4rem 1.35rem 1.5rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      counter-increment: steps;
+    }
+
+    .step::before {
+      content: counter(steps);
+      position: absolute;
+      top: 1.15rem;
+      left: 1.15rem;
+      display: grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      color: var(--unity);
+      background: var(--expand);
+      border-radius: 50%;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .step h3 {
+      display: flex;
+      min-height: 2.25rem;
+      margin: 0 0 0.7rem 3rem;
+      align-items: center;
+    }
+
+    .path,
+    code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    code {
+      padding: 0.1rem 0.28rem;
+      color: var(--unity);
+      background: #f0f4f7;
+      border-radius: 4px;
+    }
+
+    .menu-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.3rem 0;
+      padding: 0.45rem 0.7rem;
+      color: var(--unity);
+      background: var(--soft-teal);
+      border: 1px solid #b9dcda;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    figure.screenshot {
+      margin: 1.3rem 0 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #cbd7dd;
+      border-radius: 10px;
+    }
+
+    .screenshot-media {
+      background: #eef3f5;
+    }
+
+    figure.screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figure.screenshot img[hidden] {
+      display: none;
+    }
+
+    .image-placeholder {
+      display: grid;
+      min-height: clamp(220px, 38vw, 410px);
+      padding: 2rem;
+      place-items: center;
+      color: #4d606c;
+      background:
+        linear-gradient(135deg, rgba(0, 40, 85, 0.04) 25%, transparent 25%) 0 0 / 22px 22px,
+        linear-gradient(315deg, rgba(0, 169, 224, 0.05) 25%, transparent 25%) 0 0 / 22px 22px,
+        #eef3f5;
+      text-align: center;
+    }
+
+    figure.screenshot img:not([hidden]) + .image-placeholder {
+      display: none;
+    }
+
+    .placeholder-inner {
+      max-width: 34rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px dashed #9fb0ba;
+      border-radius: 9px;
+    }
+
+    .placeholder-label {
+      display: block;
+      color: var(--unity);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .placeholder-file {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.88rem;
+      overflow-wrap: anywhere;
+    }
+
+    figcaption {
+      padding: 0.75rem 1rem;
+      color: var(--muted);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .subsection {
+      margin-top: 1.6rem;
+      padding: 1.2rem 1.25rem 1.3rem;
+      background: #fbfcfc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .subsection h3 {
+      margin-top: 0;
+    }
+
+    .issue-box {
+      margin-top: 1.25rem;
+      padding: 1.2rem 1.25rem;
+      background: var(--warning-bg);
+      border: 1px solid #ebd292;
+      border-radius: 10px;
+    }
+
+    .issue-box h3 {
+      margin-top: 0;
+    }
+
+    .video-panel {
+      overflow: hidden;
+      background: var(--soft-blue);
+      border: 1px solid #afd8e8;
+      border-radius: 11px;
+    }
+
+    .video-placeholder {
+      display: grid;
+      min-height: 235px;
+      padding: clamp(1.5rem, 5vw, 2.75rem);
+      place-items: center;
+      text-align: center;
+    }
+
+    .video-placeholder-inner {
+      max-width: 38rem;
+    }
+
+    .video-icon {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 auto 1rem;
+      place-items: center;
+      color: #fff;
+      background: var(--unity);
+      border-radius: 50%;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .video-placeholder h3 {
+      margin: 0 0 0.45rem;
+    }
+
+    .video-placeholder p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .video-frame[hidden] {
+      display: none;
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .contact-box {
+      padding: clamp(1.35rem, 4vw, 2rem);
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 24px, rgba(0, 169, 224, 0.12) 24px 25px),
+        var(--unity);
+      border-top: 6px solid var(--expand);
+      border-radius: 12px;
+    }
+
+    .contact-box h2 {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .contact-box h2::after {
+      border-color: var(--expand);
+    }
+
+    .contact-box a {
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .contact-box strong {
+      color: inherit;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .article-navigation {
+      margin-top: 2.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .article-navigation .back-link {
+      margin: 0;
+    }
+
+    .site-footer {
+      padding: 1.3rem 1rem 2rem;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 880px) {
+      .toc-enabled .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        grid-row: 1;
+      }
+
+      main {
+        grid-row: 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 0.97rem;
+      }
+
+      .header-inner,
+      .layout {
+        width: min(100% - 1rem, 1120px);
+      }
+
+      .layout {
+        margin-top: 0.5rem;
+        gap: 0.75rem;
+      }
+
+      main,
+      .toc {
+        border-radius: 8px;
+      }
+
+      .step {
+        padding: 1.2rem 1rem 1.3rem;
+      }
+
+      .step::before {
+        left: 0.9rem;
+      }
+
+      .step h3 {
+        margin-left: 2.8rem;
+      }
+
+      .image-placeholder {
+        min-height: 190px;
+        padding: 1rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        font-size: 10.5pt;
+      }
+
+      .site-header {
+        color: #000;
+        background: #fff;
+        border-bottom: 3px solid #000;
+      }
+
+      .site-header h1,
+      .site-header .eyebrow {
+        color: #000;
+      }
+
+      .header-inner {
+        padding: 1rem 0;
+      }
+
+      .layout,
+      .toc-enabled .layout {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      main {
+        padding: 1rem 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .toc,
+      .back-link,
+      .video-section,
+      .site-footer {
+        display: none;
+      }
+
+      .step,
+      .subsection,
+      .issue-box,
+      figure.screenshot {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">MVNU Moodle FAQ</p>
+      <h1>How do I use rubrics and grading guides in Moodle?</h1>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="main-content">
+      <!-- This link intentionally opens in the same window. -->
+      <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+
+      <p class="article-opening">Rubrics and grading guides replace the single grade box in a Moodle Assignment with a structured form. Both can make expectations clearer for students and help you grade consistently, but they work differently.</p>
+      <p>Use a <strong>rubric</strong> when you want to select one defined achievement level for each criterion. Use a <strong>grading guide</strong> when you want to enter any score up to a maximum for each criterion and write criterion-specific comments. The process below uses a Moodle Assignment, where these methods are most commonly used. They are also available with <strong>Whole forum grading</strong> in a Forum.</p>
+
+      <section id="choose-method" data-toc="Choose a method" aria-labelledby="choose-method-heading">
+        <h2 id="choose-method-heading">Choose the Right Grading Method</h2>
+
+        <div class="subsection">
+          <h3>Use a Rubric for Defined Performance Levels</h3>
+          <p>A rubric presents each criterion as a row with specific achievement levels and point values. While grading, you select one level for every criterion. Moodle adds the selected points and converts the result to the assignment's maximum grade.</p>
+          <p>A rubric works well when:</p>
+          <ul>
+            <li>each criterion has clearly defined levels such as <strong>Excellent</strong>, <strong>Proficient</strong>, <strong>Developing</strong>, and <strong>Beginning</strong>;</li>
+            <li>you want students to see the complete performance scale before submitting; and</li>
+            <li>you don't need to award a score between two defined levels.</li>
+          </ul>
+
+          <!-- SCREENSHOT 01 START: Remove this entire figure block if the image is not needed. -->
+          <figure class="screenshot" data-screenshot-number="01">
+            <div class="screenshot-media">
+              <img src="images/01.png" alt="Example Moodle rubric showing criteria as rows and defined achievement levels with point values" decoding="async" onerror="this.hidden=true">
+              <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the general layout of a completed Moodle rubric">
+                <div class="placeholder-inner">
+                  <span class="placeholder-label">Screenshot 01: Example rubric layout</span>
+                  <span class="placeholder-file path">images/01.png</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>A rubric displays defined achievement levels for each criterion. The grader selects one level in each row.</figcaption>
+          </figure>
+          <!-- SCREENSHOT 01 END -->
+        </div>
+
+        <div class="subsection">
+          <h3>Use a Grading Guide for Flexible Scores</h3>
+          <p>A grading guide lists criteria with a maximum score for each one. While grading, you enter any score from zero through that maximum and can provide a separate comment for each criterion.</p>
+          <p>A grading guide works well when:</p>
+          <ul>
+            <li>you want structured criteria but need flexibility within each point range;</li>
+            <li>criterion-specific written feedback is important; or</li>
+            <li>you use recurring feedback that could be added to a frequently used comments list.</li>
+          </ul>
+
+          <!-- SCREENSHOT 02 START: Remove this entire figure block if the image is not needed. -->
+          <figure class="screenshot" data-screenshot-number="02">
+            <div class="screenshot-media">
+              <img src="images/02.png" alt="Example Moodle grading guide showing criteria with maximum scores and comment fields" loading="lazy" decoding="async" onerror="this.hidden=true">
+              <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the general layout of a completed Moodle grading guide">
+                <div class="placeholder-inner">
+                  <span class="placeholder-label">Screenshot 02: Example grading guide layout</span>
+                  <span class="placeholder-file path">images/02.png</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>A grading guide provides an open score and comment field for each criterion rather than defined achievement levels.</figcaption>
+          </figure>
+          <!-- SCREENSHOT 02 END -->
+        </div>
+      </section>
+
+      <section id="set-method" data-toc="Set the grading method" aria-labelledby="set-method-heading">
+        <h2 id="set-method-heading">Set the Grading Method</h2>
+
+        <!--
+          SCREENSHOT NAMING CONVENTION:
+          This article lives at faq/grading-guides-and-rubrics/index.html.
+          Its screenshots live beside it at images/[two-digit number].png.
+          Keep published numbers stable; give any later screenshot the next unused number.
+        -->
+
+        <ol class="step-list">
+          <li class="step">
+            <h3>Open the Assignment Settings</h3>
+            <p>Create a new Assignment or open an existing one and select <strong>Settings</strong>. Expand the <strong>Grade</strong> section.</p>
+          </li>
+
+          <li class="step">
+            <h3>Choose the Method and Maximum Grade</h3>
+            <p>Set <strong>Grading method</strong> to <strong>Rubric</strong> or <strong>Grading guide</strong>. Confirm that <strong>Maximum grade</strong> matches the value the assignment should contribute to the Moodle gradebook.</p>
+
+            <aside class="callout" aria-label="Important note about grading form points">
+              <p><strong>Important:</strong> The point total inside the grading form can differ from the assignment's maximum grade because Moodle converts the form result proportionally. Matching the two totals, when practical, makes the calculation easier to understand.</p>
+            </aside>
+
+            <!-- SCREENSHOT 03 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="03">
+              <div class="screenshot-media">
+                <img src="images/03.png" alt="Grade section of a Moodle Assignment showing the Maximum grade and Grading method settings" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Maximum grade and Grading method settings in a Moodle Assignment">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 03: Assignment grading method and maximum grade</span>
+                    <span class="placeholder-file path">images/03.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Choose <strong>Rubric</strong> or <strong>Grading guide</strong> and verify the assignment's <strong>Maximum grade</strong>.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 03 END -->
+          </li>
+
+          <li class="step">
+            <h3>Save and Open Advanced Grading</h3>
+            <p>Select <strong>Save and display</strong>. Moodle may take you directly to the grading-form setup page. If it doesn't, open the Assignment and select <strong>Advanced grading</strong> from the menu at the top of the page.</p>
+          </li>
+
+          <li class="step">
+            <h3>Start a New Form or Reuse One</h3>
+            <p>Select <strong>Define new grading form from scratch</strong> to build a new form. If you have already created a suitable rubric or grading guide, select <strong>Create new grading form from a template</strong>. Reusing a form is covered later in this article.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="build-form" data-toc="Build the grading form" aria-labelledby="build-form-heading">
+        <h2 id="build-form-heading">Build the Grading Form</h2>
+        <p>Give the form a clear <strong>Name</strong>. The name and description help you identify the form later but aren't shown to students. Then complete the editor for the method you selected.</p>
+
+        <div class="subsection" id="build-rubric">
+          <h3>Build a Rubric</h3>
+          <ol>
+            <li>Select the criterion text and enter what you are evaluating.</li>
+            <li>For each level, enter a clear performance description and its point value.</li>
+            <li>Use <strong>Add level</strong> or <strong>Add criterion</strong> as needed. You can also duplicate a criterion and revise the copy.</li>
+            <li>Review the rubric options. Keep <strong>Allow users to preview rubric</strong> selected if students should see the rubric before they submit. <strong>Allow grader to add text remarks for each criterion</strong> is enabled by default and lets you write a separate comment for each criterion while grading.</li>
+            <li>Select <strong>Save rubric and make it ready</strong>.</li>
+          </ol>
+
+          <aside class="callout" aria-label="Important grading note">
+            <p><strong>Important:</strong> When grading, Moodle permits only the point values represented by the levels you created. If a criterion has levels worth 0, 3, and 5 points, you cannot award 4 points for that criterion.</p>
+          </aside>
+
+          <!-- SCREENSHOT 04 START: Remove this entire figure block if the image is not needed. -->
+          <figure class="screenshot" data-screenshot-number="04">
+            <div class="screenshot-media">
+              <img src="images/04.png" alt="Moodle rubric editor showing criteria as rows, achievement levels, point values, and rubric options" loading="lazy" decoding="async" onerror="this.hidden=true">
+              <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Moodle rubric editor with criteria, achievement levels, point values, and options">
+                <div class="placeholder-inner">
+                  <span class="placeholder-label">Screenshot 04: Rubric editor</span>
+                  <span class="placeholder-file path">images/04.png</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>Each criterion is a row. Define every achievement level and assign its point value before making the rubric ready.</figcaption>
+          </figure>
+          <!-- SCREENSHOT 04 END -->
+        </div>
+
+        <div class="subsection" id="build-guide">
+          <h3>Build a Grading Guide</h3>
+          <ol>
+            <li>Enter a name for each criterion.</li>
+            <li>Add a description for students so they understand what the criterion measures.</li>
+            <li>Add a description for graders when internal guidance would help you or another grader apply the criterion consistently.</li>
+            <li>Enter the maximum score available for the criterion.</li>
+            <li>Use <strong>Add criterion</strong> for each additional area you need to assess.</li>
+            <li>Add frequently used comments if you want reusable feedback available while grading.</li>
+            <li>Review the guide options to decide whether students may see the guide definition and the points available for each criterion.</li>
+            <li>Select <strong>Save grading guide and make it ready</strong>.</li>
+          </ol>
+
+          <!-- SCREENSHOT 05 START: Remove this entire figure block if the image is not needed. -->
+          <figure class="screenshot" data-screenshot-number="05">
+            <div class="screenshot-media">
+              <img src="images/05.png" alt="Moodle grading guide editor showing a criterion, student and grader descriptions, maximum score, and frequently used comments" loading="lazy" decoding="async" onerror="this.hidden=true">
+              <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Moodle grading guide editor with criterion descriptions, maximum score, and frequently used comments">
+                <div class="placeholder-inner">
+                  <span class="placeholder-label">Screenshot 05: Grading guide editor</span>
+                  <span class="placeholder-file path">images/05.png</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>A grading guide gives each criterion a maximum score and provides separate spaces for student-facing and grader-facing descriptions.</figcaption>
+          </figure>
+          <!-- SCREENSHOT 05 END -->
+        </div>
+
+        <p>A form saved as a draft cannot be used to assess submissions. When the form is complete, make sure its status is <strong>Ready for use</strong>.</p>
+      </section>
+
+      <section id="grade-submissions" data-toc="Grade submissions" aria-labelledby="grade-submissions-heading">
+        <h2 id="grade-submissions-heading">Grade Submissions</h2>
+        <p>Open the Assignment and select <strong>Grade</strong>. Moodle displays the submission and the active grading form in the grader.</p>
+
+        <div class="subsection" id="grade-rubric">
+          <h3>Grade with a Rubric</h3>
+          <ol>
+            <li>Select one achievement level for every criterion. Moodle cannot calculate the final grade until every criterion has a level.</li>
+            <li>If remarks are enabled, enter criterion-specific comments where helpful.</li>
+            <li>Add overall <strong>Feedback comments</strong> or feedback files if those feedback types are enabled in the Assignment.</li>
+            <li>Select <strong>Save changes</strong> or <strong>Save and show next</strong>.</li>
+          </ol>
+
+          <!-- SCREENSHOT 06 START: Remove this entire figure block if the image is not needed. -->
+          <figure class="screenshot" data-screenshot-number="06">
+            <div class="screenshot-media">
+              <img src="images/06.png" alt="Moodle assignment grader showing a rubric with one achievement level selected for each criterion" loading="lazy" decoding="async" onerror="this.hidden=true">
+              <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Moodle assignment grader with selected rubric levels">
+                <div class="placeholder-inner">
+                  <span class="placeholder-label">Screenshot 06: Grading with a rubric</span>
+                  <span class="placeholder-file path">images/06.png</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>Select one level in every criterion row. Moodle calculates the assignment grade from the selected levels.</figcaption>
+          </figure>
+          <!-- SCREENSHOT 06 END -->
+        </div>
+
+        <div class="subsection" id="grade-guide">
+          <h3>Grade with a Grading Guide</h3>
+          <ol>
+            <li>Enter a score for each criterion, up to the maximum shown.</li>
+            <li>Enter a comment for each criterion where feedback is needed. Select a frequently used comment to insert it if you created any.</li>
+            <li>Add overall <strong>Feedback comments</strong> or feedback files if those feedback types are enabled in the Assignment.</li>
+            <li>Select <strong>Save changes</strong> or <strong>Save and show next</strong>.</li>
+          </ol>
+
+          <!-- SCREENSHOT 07 START: Remove this entire figure block if the image is not needed. -->
+          <figure class="screenshot" data-screenshot-number="07">
+            <div class="screenshot-media">
+              <img src="images/07.png" alt="Moodle assignment grader showing a grading guide with criterion scores and comment fields" loading="lazy" decoding="async" onerror="this.hidden=true">
+              <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Moodle assignment grader with grading guide scores and criterion comments">
+                <div class="placeholder-inner">
+                  <span class="placeholder-label">Screenshot 07: Grading with a grading guide</span>
+                  <span class="placeholder-file path">images/07.png</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>Enter a score and, when useful, a comment for each criterion.</figcaption>
+          </figure>
+          <!-- SCREENSHOT 07 END -->
+        </div>
+
+        <p>If the form's student-visibility options are enabled, students can review the criteria before submitting and see the completed form with their grade and feedback afterward.</p>
+      </section>
+
+      <section id="reuse-edit" data-toc="Reuse or edit a form" aria-labelledby="reuse-edit-heading">
+        <h2 id="reuse-edit-heading">Reuse or Edit a Grading Form</h2>
+
+        <h3>Reuse a Form in Another Assignment</h3>
+        <p>Set the new Assignment to the same <strong>Grading method</strong>, open the Assignment, and select <strong>Advanced grading</strong> from the menu at the top of the page. Select <strong>Create new grading form from a template</strong>. Search for words from the form's name, description, or criteria. Include your own forms in the search results if needed, then use the appropriate form as the template.</p>
+        <p>Only forms marked <strong>Ready for use</strong> can be reused. Moodle creates an independent copy for the new Assignment, so later edits to the copy don't change the original form. A grading form is also copied when its Assignment is duplicated or imported into another course.</p>
+
+        <h3>Edit the Current Form</h3>
+        <p>Open the Assignment and select <strong>Advanced grading</strong> from the menu at the top of the page. Select <strong>Edit the current form definition</strong>, make the changes, and save the form so it remains ready for use.</p>
+
+        <aside class="callout" aria-label="Important note about editing a used grading form">
+          <p><strong>Important:</strong> Avoid changing criteria, levels, or point values after grading has begun. Moodle may mark existing assessments as needing review, and you may need to reassess submissions so the grades remain valid and comparable. Correcting a minor wording error may still require you to decide whether existing assessments should be reviewed.</p>
+        </aside>
+      </section>
+
+      <!--
+        VIDEO SETUP: Paste the OneDrive embed URL between the quotation marks in
+        data-video-embed-url below. Leave it empty to show the coming-soon state.
+      -->
+      <section class="video-section" id="video" data-toc="Video walkthrough" data-video-embed-url="" aria-labelledby="video-heading">
+        <h2 id="video-heading">Video Walkthrough</h2>
+        <div class="video-panel">
+          <div class="video-placeholder" data-video-placeholder>
+            <div class="video-placeholder-inner">
+              <span class="video-icon" aria-hidden="true">▶</span>
+              <h3>Video Coming Soon</h3>
+              <p>A video walkthrough is being developed. The written instructions above provide the complete process in the meantime.</p>
+            </div>
+          </div>
+          <div class="video-frame" data-video-frame hidden>
+            <iframe data-video-iframe title="Video walkthrough: using rubrics and grading guides in Moodle" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-box" id="help" data-toc="Need help?" aria-labelledby="help-heading">
+        <h2 id="help-heading">Need Help?</h2>
+        <p>For help with Moodle, email the <strong>Center for Innovative Education</strong> at <a href="mailto:cie@mvnu.edu">cie@mvnu.edu</a>.</p>
+        <p>Please include the course name and a brief description of what you're trying to do or what isn't working. Screenshots are helpful when available.</p>
+      </section>
+
+      <nav class="article-navigation" aria-label="Return to Moodle FAQ">
+        <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+      </nav>
+    </main>
+
+    <!-- Built automatically for sufficiently long articles. -->
+    <nav class="toc" data-toc-nav aria-label="On this page" hidden>
+      <h2>On This Page</h2>
+      <ol data-toc-list></ol>
+    </nav>
+  </div>
+
+  <footer class="site-footer">
+    <p>Center for Innovative Education · Mount Vernon Nazarene University</p>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /*
+        Long articles receive an On This Page menu automatically. A page must
+        have at least four marked sections and at least 700 words in <main>.
+      */
+      const minimumHeadings = 4;
+      const minimumWords = 700;
+      const main = document.querySelector("main");
+      const tocNav = document.querySelector("[data-toc-nav]");
+      const tocList = document.querySelector("[data-toc-list]");
+      const tocSections = Array.from(main.querySelectorAll("section[data-toc]"));
+      const wordCount = (main.textContent.match(/\b[\w’'-]+\b/g) || []).length;
+
+      if (tocSections.length >= minimumHeadings && wordCount >= minimumWords) {
+        tocSections.forEach(function (section) {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = "#" + section.id;
+          link.textContent = section.dataset.toc;
+          item.appendChild(link);
+          tocList.appendChild(item);
+        });
+
+        tocNav.hidden = false;
+        document.body.classList.add("toc-enabled");
+      }
+
+      /*
+        The video stays in its coming-soon state until a OneDrive embed URL is
+        added to data-video-embed-url on the Video Walkthrough section.
+      */
+      const videoSection = document.querySelector("[data-video-embed-url]");
+      const embedUrl = videoSection.dataset.videoEmbedUrl.trim();
+
+      if (embedUrl) {
+        const iframe = videoSection.querySelector("[data-video-iframe]");
+        const frame = videoSection.querySelector("[data-video-frame]");
+        const placeholder = videoSection.querySelector("[data-video-placeholder]");
+
+        iframe.src = embedUrl;
+        frame.hidden = false;
+        placeholder.hidden = true;
+      }
+    }());
+  </script>
+</body>
+</html>
