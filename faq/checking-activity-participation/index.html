@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn how to use Moodle's Course participation report to identify who has or hasn't participated in a specific course activity.">
+  <title>How can I see who has or hasn’t participated in a Moodle activity? | MVNU Moodle FAQ</title>
+  <style>
+    :root {
+      /* MVNU brand palette */
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --purpose: #ffffff;
+      --expand: #00a9e0;
+      --expand-dark: #006b8e;
+      --drive: #046a38;
+      --explore: #f1c400;
+      --ink: #17324a;
+      --muted: #536b7d;
+      --line: #cedae3;
+      --paper: #ffffff;
+      --page: #f2f7fa;
+      --warning-bg: #fff9dc;
+      --warning-line: #f1c400;
+      --soft-blue: #eaf7fc;
+      --soft-teal: #eef8f7;
+      --shadow: 0 12px 32px rgba(0, 40, 85, 0.1);
+      --radius: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.25rem;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--expand-dark);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.16em;
+    }
+
+    a:hover {
+      color: var(--drive);
+    }
+
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--explore);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 100;
+      padding: 0.65rem 0.9rem;
+      color: var(--unity);
+      background: #fff;
+      border: 2px solid var(--explore);
+      border-radius: 6px;
+      transform: translateY(-150%);
+      transition: transform 0.15s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 25px, rgba(0, 169, 224, 0.12) 25px 26px),
+        var(--unity);
+      border-bottom: 6px solid var(--expand);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(1.8rem, 5vw, 3.4rem) 0 clamp(2rem, 5vw, 3.6rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--expand);
+      font-size: 0.82rem;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--unity);
+      font-family: inherit;
+      font-weight: 750;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 940px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2rem, 4.7vw, 3.75rem);
+      letter-spacing: -0.025em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 1.6rem auto 4rem;
+      align-items: start;
+    }
+
+    .toc-enabled .layout {
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
+
+    main {
+      min-width: 0;
+      padding: clamp(1.35rem, 4vw, 3.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.35rem;
+      color: var(--unity);
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .back-link::before {
+      content: "\2190";
+      color: var(--expand-dark);
+      font-size: 1.15em;
+      line-height: 1;
+    }
+
+    .back-link:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    .article-opening {
+      margin: 0 0 1.1rem;
+      font-size: 1.06rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--expand);
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 40, 85, 0.07);
+    }
+
+    .toc[hidden] {
+      display: none;
+    }
+
+    .toc h2 {
+      margin: 0 0 0.65rem;
+      padding: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border: 0;
+    }
+
+    .toc h2::after {
+      display: none;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc li + li {
+      margin-top: 0.4rem;
+    }
+
+    .toc a {
+      color: var(--ink);
+      font-size: 0.93rem;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    section + section {
+      margin-top: 3.25rem;
+      padding-top: 0.25rem;
+    }
+
+    h2 {
+      margin: 0 0 1.1rem;
+      padding-bottom: 0.55rem;
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      border-bottom: 2px solid var(--line);
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      width: 4rem;
+      margin-bottom: -0.65rem;
+      padding-top: 0.55rem;
+      border-bottom: 4px solid var(--expand);
+    }
+
+    h3 {
+      margin: 2rem 0 0.6rem;
+      font-size: clamp(1.2rem, 2.2vw, 1.48rem);
+    }
+
+    p {
+      margin: 0.7rem 0 1rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4rem;
+    }
+
+    li + li {
+      margin-top: 0.35rem;
+    }
+
+    strong {
+      color: var(--unity);
+    }
+
+    .callout {
+      margin: 1.5rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--warning-bg);
+      border-left: 5px solid var(--warning-line);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 1.3rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.4rem 1.35rem 1.5rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      counter-increment: steps;
+    }
+
+    .step::before {
+      content: counter(steps);
+      position: absolute;
+      top: 1.15rem;
+      left: 1.15rem;
+      display: grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      color: var(--unity);
+      background: var(--expand);
+      border-radius: 50%;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .step h3 {
+      display: flex;
+      min-height: 2.25rem;
+      margin: 0 0 0.7rem 3rem;
+      align-items: center;
+    }
+
+    .path,
+    code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    code {
+      padding: 0.1rem 0.28rem;
+      color: var(--unity);
+      background: #f0f4f7;
+      border-radius: 4px;
+    }
+
+    .menu-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.3rem 0;
+      padding: 0.45rem 0.7rem;
+      color: var(--unity);
+      background: var(--soft-teal);
+      border: 1px solid #b9dcda;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    figure.screenshot {
+      margin: 1.3rem 0 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #cbd7dd;
+      border-radius: 10px;
+    }
+
+    .screenshot-media {
+      background: #eef3f5;
+    }
+
+    figure.screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figure.screenshot img[hidden] {
+      display: none;
+    }
+
+    .image-placeholder {
+      display: grid;
+      min-height: clamp(220px, 38vw, 410px);
+      padding: 2rem;
+      place-items: center;
+      color: #4d606c;
+      background:
+        linear-gradient(135deg, rgba(0, 40, 85, 0.04) 25%, transparent 25%) 0 0 / 22px 22px,
+        linear-gradient(315deg, rgba(0, 169, 224, 0.05) 25%, transparent 25%) 0 0 / 22px 22px,
+        #eef3f5;
+      text-align: center;
+    }
+
+    figure.screenshot img:not([hidden]) + .image-placeholder {
+      display: none;
+    }
+
+    .placeholder-inner {
+      max-width: 34rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px dashed #9fb0ba;
+      border-radius: 9px;
+    }
+
+    .placeholder-label {
+      display: block;
+      color: var(--unity);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .placeholder-file {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.88rem;
+      overflow-wrap: anywhere;
+    }
+
+    figcaption {
+      padding: 0.75rem 1rem;
+      color: var(--muted);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .subsection {
+      margin-top: 1.6rem;
+      padding: 1.2rem 1.25rem 1.3rem;
+      background: #fbfcfc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .subsection h3 {
+      margin-top: 0;
+    }
+
+    .issue-box {
+      margin-top: 1.25rem;
+      padding: 1.2rem 1.25rem;
+      background: var(--warning-bg);
+      border: 1px solid #ebd292;
+      border-radius: 10px;
+    }
+
+    .issue-box h3 {
+      margin-top: 0;
+    }
+
+    .video-panel {
+      overflow: hidden;
+      background: var(--soft-blue);
+      border: 1px solid #afd8e8;
+      border-radius: 11px;
+    }
+
+    .video-placeholder {
+      display: grid;
+      min-height: 235px;
+      padding: clamp(1.5rem, 5vw, 2.75rem);
+      place-items: center;
+      text-align: center;
+    }
+
+    .video-placeholder-inner {
+      max-width: 38rem;
+    }
+
+    .video-icon {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 auto 1rem;
+      place-items: center;
+      color: #fff;
+      background: var(--unity);
+      border-radius: 50%;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .video-placeholder h3 {
+      margin: 0 0 0.45rem;
+    }
+
+    .video-placeholder p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .video-frame[hidden] {
+      display: none;
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .contact-box {
+      padding: clamp(1.35rem, 4vw, 2rem);
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 24px, rgba(0, 169, 224, 0.12) 24px 25px),
+        var(--unity);
+      border-top: 6px solid var(--expand);
+      border-radius: 12px;
+    }
+
+    .contact-box h2 {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .contact-box h2::after {
+      border-color: var(--expand);
+    }
+
+    .contact-box a {
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .contact-box strong {
+      color: inherit;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .article-navigation {
+      margin-top: 2.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .article-navigation .back-link {
+      margin: 0;
+    }
+
+    .site-footer {
+      padding: 1.3rem 1rem 2rem;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 880px) {
+      .toc-enabled .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        grid-row: 1;
+      }
+
+      main {
+        grid-row: 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 0.97rem;
+      }
+
+      .header-inner,
+      .layout {
+        width: min(100% - 1rem, 1120px);
+      }
+
+      .layout {
+        margin-top: 0.5rem;
+        gap: 0.75rem;
+      }
+
+      main,
+      .toc {
+        border-radius: 8px;
+      }
+
+      .step {
+        padding: 1.2rem 1rem 1.3rem;
+      }
+
+      .step::before {
+        left: 0.9rem;
+      }
+
+      .step h3 {
+        margin-left: 2.8rem;
+      }
+
+      .image-placeholder {
+        min-height: 190px;
+        padding: 1rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        font-size: 10.5pt;
+      }
+
+      .site-header {
+        color: #000;
+        background: #fff;
+        border-bottom: 3px solid #000;
+      }
+
+      .site-header h1,
+      .site-header .eyebrow {
+        color: #000;
+      }
+
+      .header-inner {
+        padding: 1rem 0;
+      }
+
+      .layout,
+      .toc-enabled .layout {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      main {
+        padding: 1rem 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .toc,
+      .back-link,
+      .video-section,
+      .site-footer {
+        display: none;
+      }
+
+      .step,
+      .subsection,
+      .issue-box,
+      figure.screenshot {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">MVNU Moodle FAQ</p>
+      <h1>How can I see who has or hasn’t participated in a Moodle activity?</h1>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="main-content">
+      <!-- This link intentionally opens in the same window. -->
+      <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+
+      <p class="article-opening">The <strong>Course participation</strong> report shows whether Moodle recorded a selected type of action for each student in one activity during a chosen period. Use it to answer focused questions such as “Who hasn't opened this resource?” or “Who has no submission-related activity for this assignment?”</p>
+      <p>The report checks Moodle activity records. It can confirm that an action occurred, but it does not evaluate the quality of a student's work or prove that an assignment, quiz, or other activity was completed correctly or on time.</p>
+
+      <section id="run-report" data-toc="Run the report" aria-labelledby="run-report-heading">
+        <h2 id="run-report-heading">Run the Course Participation Report</h2>
+
+        <!--
+          SCREENSHOT NAMING CONVENTION:
+          Each article lives at faq/[descriptive-article-folder]/index.html.
+          Its screenshots live beside it at images/[two-digit number].png.
+          Keep published numbers stable; give any later screenshot the next unused number.
+        -->
+
+        <ol class="step-list">
+          <li class="step">
+            <h3>Open the Report</h3>
+            <p>Open the Moodle course, then go to:</p>
+            <p><span class="menu-path" aria-label="Reports, then Course participation">Reports → Course participation</span></p>
+          </li>
+
+          <li class="step">
+            <h3>Choose the Activity and Time Period</h3>
+            <p>Use <strong>Activity module</strong> to select the activity or resource you want to check. The report examines one activity at a time.</p>
+            <p>Under <strong>Look back</strong>, choose how far back from the current time Moodle should search. Select a period that covers the time when students were expected to use the activity.</p>
+          </li>
+
+          <li class="step">
+            <h3>Choose Whom and What to Check</h3>
+            <p>Set <strong>Show only</strong> to <strong>Student</strong>. If the course uses groups, you can also limit the report to a specific group.</p>
+            <p>Under <strong>Show actions</strong>, choose the action that matches your question:</p>
+            <ul>
+              <li><strong>View</strong> includes read-type actions, such as opening or viewing the selected item.</li>
+              <li><strong>Post</strong> includes participating actions that create, update, or remove information in the activity.</li>
+              <li><strong>All actions</strong> combines <strong>View</strong> and <strong>Post</strong>.</li>
+            </ul>
+
+            <aside class="callout" aria-label="Important note about Post actions">
+              <p><strong>Important:</strong> <strong>Post</strong> is Moodle's technical label for several kinds of activity. It does not mean only writing a forum post, and a <strong>Post</strong> result does not necessarily confirm a final submission or completed quiz attempt.</p>
+            </aside>
+          </li>
+
+          <li class="step">
+            <h3>Generate the Report</h3>
+            <p>Select <strong>Go</strong>. Moodle will list the students who match your filters and show whether it found any matching activity for each student.</p>
+
+            <!-- SCREENSHOT 01 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="01">
+              <div class="screenshot-media">
+                <img src="images/01.png" alt="Moodle Course participation report showing the activity, time period, student role, action filters, and Yes or No results" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Course participation filters and Yes or No results in Moodle">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 01: Course participation filters and results</span>
+                    <span class="placeholder-file path">images/01.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>The report combines the selected filters with a student list showing <strong>Yes</strong> or <strong>No</strong> and the number of matching participation events.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 01 END -->
+          </li>
+
+          <li class="step">
+            <h3>Message Students Who Have Not Participated</h3>
+            <p>Select the checkbox beside each student you want to message. To select everyone with a <strong>No</strong> result for the activity, action, and time period you chose, select <strong>Select all 'No'</strong> at the bottom of the report.</p>
+            <p>Then, from the <strong>With selected users...</strong> menu at the bottom of the report, choose <strong>Send a message</strong>.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="action-meanings" data-toc="View and Post actions" aria-labelledby="action-meanings-heading">
+        <h2 id="action-meanings-heading">What View and Post Mean for Common Activities</h2>
+        <p>The actions included under <strong>View</strong> and <strong>Post</strong> depend on the type of activity selected.</p>
+
+        <div class="subsection" id="assignment-actions">
+          <h3>Assignments</h3>
+          <p><strong>View</strong> can include opening the assignment, viewing the student's submission, or viewing feedback.</p>
+          <p><strong>Post</strong> can include creating, saving, updating, submitting, duplicating, or removing submission content. A <strong>Yes</strong> result confirms submission-related activity, but it does not necessarily mean that the student made a final submission. Use the assignment's <strong>Submissions</strong> page to confirm the student's current submission status.</p>
+        </div>
+
+        <div class="subsection" id="quiz-actions">
+          <h3>Quizzes</h3>
+          <p><strong>View</strong> can include opening the quiz or viewing an attempt, attempt summary, or review page.</p>
+          <p><strong>Post</strong> can include starting an attempt, autosaving or updating answers, and submitting an attempt. A <strong>Yes</strong> result confirms attempt-related activity, but it does not prove that an attempt was completed. Use the quiz's <strong>Results</strong> page to confirm attempt and submission details.</p>
+        </div>
+
+        <div class="subsection" id="forum-actions">
+          <h3>Forums</h3>
+          <p><strong>View</strong> can include opening or searching the forum and viewing discussions.</p>
+          <p><strong>Post</strong> can include creating or updating a discussion or reply. It can also include subscribing to or unsubscribing from the forum or a discussion. Because subscription changes count, a <strong>Yes</strong> result is not always proof that the student wrote a discussion post.</p>
+        </div>
+
+        <div class="subsection" id="resource-actions">
+          <h3>Resources and External Tools</h3>
+          <p>Files, Pages, URLs, and Books normally produce meaningful <strong>View</strong> activity only. Selecting <strong>Post</strong> for one of these resources will not normally identify student participation.</p>
+          <p>For an external tool or publisher activity, Moodle may record that the student opened or launched the activity, but work completed inside the external platform may not appear in the Course participation report.</p>
+        </div>
+      </section>
+
+      <section id="read-results" data-toc="Read the results" aria-labelledby="read-results-heading">
+        <h2 id="read-results-heading">Read and Use the Results</h2>
+        <p>A <strong>Yes</strong> indicates that Moodle found at least one matching participation event during the selected look-back period. A <strong>No</strong> means that Moodle found no matching event for that student within the selected filters.</p>
+        <p>A <strong>No</strong> does not mean that the student has done nothing in the course. It only applies to the selected activity, action type, and time period.</p>
+
+        <h3>Understand the Number Beside Yes</h3>
+        <p>The number in a result such as <strong>Yes (10)</strong> is the number of matching participation events Moodle recorded. It is not the number of submissions, quiz attempts, or completed activities.</p>
+        <ul>
+          <li>With <strong>All actions</strong> selected, the number combines repeated views with any create, update, or other Post activity. This can produce a high count.</li>
+          <li>For an assignment, <strong>Yes (2)</strong> under <strong>Post</strong> could represent creating or saving the submission and later updating or submitting it. It does not necessarily mean that the student submitted twice.</li>
+          <li>For a quiz, the Post count can include starting the attempt, autosaving or updating answers, and submitting. It should not be interpreted as the number of attempts.</li>
+        </ul>
+        <p>Use the count as a general indication of activity. When the exact sequence or status matters, open the activity's own submission or results page or review the Moodle logs.</p>
+
+      </section>
+
+      <section id="best-uses" data-toc="Best uses" aria-labelledby="best-uses-heading">
+        <h2 id="best-uses-heading">When This Report Is Most Useful</h2>
+        <p>Use the Course participation report when you need a quick answer about one specific activity, especially to:</p>
+        <ul>
+          <li>identify students who haven't opened an important reading, file, page, or assignment;</li>
+          <li>identify students with no submission-related activity for an assignment;</li>
+          <li>identify students with no attempt-related activity for a quiz;</li>
+          <li>screen for students with no Post activity in a discussion forum;</li>
+          <li>check participation during a recent period without reviewing individual students one at a time; or</li>
+          <li>select nonparticipants and send a targeted reminder.</li>
+        </ul>
+        <p>It is not designed to show a student's complete sequence of actions across the course, confirm final submission status, or report configured completion status. Use it when the question is limited to whether Moodle recorded a particular kind of action in one activity.</p>
+      </section>
+
+      <!--
+        VIDEO SETUP: Paste the OneDrive embed URL between the quotation marks in
+        data-video-embed-url below. Leave it empty to show the coming-soon state.
+      -->
+      <section class="video-section" id="video" data-toc="Video walkthrough" data-video-embed-url="" aria-labelledby="video-heading">
+        <h2 id="video-heading">Video Walkthrough</h2>
+        <div class="video-panel">
+          <div class="video-placeholder" data-video-placeholder>
+            <div class="video-placeholder-inner">
+              <span class="video-icon" aria-hidden="true">▶</span>
+              <h3>Video Coming Soon</h3>
+              <p>A video walkthrough is being developed. The written instructions above provide the complete process in the meantime.</p>
+            </div>
+          </div>
+          <div class="video-frame" data-video-frame hidden>
+            <iframe data-video-iframe title="Video walkthrough: checking participation in a Moodle activity" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-box" id="help" data-toc="Need help?" aria-labelledby="help-heading">
+        <h2 id="help-heading">Need Help?</h2>
+        <p>For help with Moodle, email the <strong>Center for Innovative Education</strong> at <a href="mailto:cie@mvnu.edu">cie@mvnu.edu</a>.</p>
+        <p>Please include the course name and a brief description of what you're trying to do or what isn't working. Screenshots are helpful when available.</p>
+      </section>
+
+      <nav class="article-navigation" aria-label="Return to Moodle FAQ">
+        <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+      </nav>
+    </main>
+
+    <!-- Built automatically for sufficiently long articles. -->
+    <nav class="toc" data-toc-nav aria-label="On this page" hidden>
+      <h2>On This Page</h2>
+      <ol data-toc-list></ol>
+    </nav>
+  </div>
+
+  <footer class="site-footer">
+    <p>Center for Innovative Education · Mount Vernon Nazarene University</p>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /*
+        Long articles receive an On This Page menu automatically. A page must
+        have at least four marked sections and at least 700 words in <main>.
+      */
+      const minimumHeadings = 4;
+      const minimumWords = 700;
+      const main = document.querySelector("main");
+      const tocNav = document.querySelector("[data-toc-nav]");
+      const tocList = document.querySelector("[data-toc-list]");
+      const tocSections = Array.from(main.querySelectorAll("section[data-toc]"));
+      const wordCount = (main.textContent.match(/\b[\w’'-]+\b/g) || []).length;
+
+      if (tocSections.length >= minimumHeadings && wordCount >= minimumWords) {
+        tocSections.forEach(function (section) {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = "#" + section.id;
+          link.textContent = section.dataset.toc;
+          item.appendChild(link);
+          tocList.appendChild(item);
+        });
+
+        tocNav.hidden = false;
+        document.body.classList.add("toc-enabled");
+      }
+
+      /*
+        The video stays in its coming-soon state until a OneDrive embed URL is
+        added to data-video-embed-url on the Video Walkthrough section.
+      */
+      const videoSection = document.querySelector("[data-video-embed-url]");
+      const embedUrl = videoSection.dataset.videoEmbedUrl.trim();
+
+      if (embedUrl) {
+        const iframe = videoSection.querySelector("[data-video-iframe]");
+        const frame = videoSection.querySelector("[data-video-frame]");
+        const placeholder = videoSection.querySelector("[data-video-placeholder]");
+
+        iframe.src = embedUrl;
+        frame.hidden = false;
+        placeholder.hidden = true;
+      }
+    }());
+  </script>
+</body>
+</html>
