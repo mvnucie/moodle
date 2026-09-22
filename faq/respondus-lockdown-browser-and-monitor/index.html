@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn how to set up Respondus LockDown Browser and Respondus Monitor for a Moodle quiz or exam at MVNU.">
+  <title>How do I use Respondus LockDown Browser and Monitor for a Moodle quiz or exam? | MVNU Moodle FAQ</title>
+  <style>
+    :root {
+      /* MVNU brand palette */
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --purpose: #ffffff;
+      --expand: #00a9e0;
+      --expand-dark: #006b8e;
+      --drive: #046a38;
+      --explore: #f1c400;
+      --ink: #17324a;
+      --muted: #536b7d;
+      --line: #cedae3;
+      --paper: #ffffff;
+      --page: #f2f7fa;
+      --warning-bg: #fff9dc;
+      --warning-line: #f1c400;
+      --soft-blue: #eaf7fc;
+      --soft-teal: #eef8f7;
+      --shadow: 0 12px 32px rgba(0, 40, 85, 0.1);
+      --radius: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.25rem;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--expand-dark);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.16em;
+    }
+
+    a:hover {
+      color: var(--drive);
+    }
+
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--explore);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 100;
+      padding: 0.65rem 0.9rem;
+      color: var(--unity);
+      background: #fff;
+      border: 2px solid var(--explore);
+      border-radius: 6px;
+      transform: translateY(-150%);
+      transition: transform 0.15s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 25px, rgba(0, 169, 224, 0.12) 25px 26px),
+        var(--unity);
+      border-bottom: 6px solid var(--expand);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(1.8rem, 5vw, 3.4rem) 0 clamp(2rem, 5vw, 3.6rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--expand);
+      font-size: 0.82rem;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--unity);
+      font-family: inherit;
+      font-weight: 750;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 940px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2rem, 4.7vw, 3.75rem);
+      letter-spacing: -0.025em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 1.6rem auto 4rem;
+      align-items: start;
+    }
+
+    .toc-enabled .layout {
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
+
+    main {
+      min-width: 0;
+      padding: clamp(1.35rem, 4vw, 3.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.35rem;
+      color: var(--unity);
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .back-link::before {
+      content: "\2190";
+      color: var(--expand-dark);
+      font-size: 1.15em;
+      line-height: 1;
+    }
+
+    .back-link:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    .article-opening {
+      margin: 0 0 1.1rem;
+      font-size: 1.06rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--expand);
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 40, 85, 0.07);
+    }
+
+    .toc[hidden] {
+      display: none;
+    }
+
+    .toc h2 {
+      margin: 0 0 0.65rem;
+      padding: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border: 0;
+    }
+
+    .toc h2::after {
+      display: none;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc li + li {
+      margin-top: 0.4rem;
+    }
+
+    .toc a {
+      color: var(--ink);
+      font-size: 0.93rem;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    section + section {
+      margin-top: 3.25rem;
+      padding-top: 0.25rem;
+    }
+
+    h2 {
+      margin: 0 0 1.1rem;
+      padding-bottom: 0.55rem;
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      border-bottom: 2px solid var(--line);
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      width: 4rem;
+      margin-bottom: -0.65rem;
+      padding-top: 0.55rem;
+      border-bottom: 4px solid var(--expand);
+    }
+
+    h3 {
+      margin: 2rem 0 0.6rem;
+      font-size: clamp(1.2rem, 2.2vw, 1.48rem);
+    }
+
+    p {
+      margin: 0.7rem 0 1rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4rem;
+    }
+
+    li + li {
+      margin-top: 0.35rem;
+    }
+
+    strong {
+      color: var(--unity);
+    }
+
+    .callout {
+      margin: 1.5rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--warning-bg);
+      border-left: 5px solid var(--warning-line);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 1.3rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.4rem 1.35rem 1.5rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      counter-increment: steps;
+    }
+
+    .step::before {
+      content: counter(steps);
+      position: absolute;
+      top: 1.15rem;
+      left: 1.15rem;
+      display: grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      color: var(--unity);
+      background: var(--expand);
+      border-radius: 50%;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .step h3 {
+      display: flex;
+      min-height: 2.25rem;
+      margin: 0 0 0.7rem 3rem;
+      align-items: center;
+    }
+
+    .path,
+    code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    code {
+      padding: 0.1rem 0.28rem;
+      color: var(--unity);
+      background: #f0f4f7;
+      border-radius: 4px;
+    }
+
+    .menu-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.3rem 0;
+      padding: 0.45rem 0.7rem;
+      color: var(--unity);
+      background: var(--soft-teal);
+      border: 1px solid #b9dcda;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    figure.screenshot {
+      margin: 1.3rem 0 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #cbd7dd;
+      border-radius: 10px;
+    }
+
+    .screenshot-media {
+      background: #eef3f5;
+    }
+
+    figure.screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figure.screenshot img[hidden] {
+      display: none;
+    }
+
+    .image-placeholder {
+      display: grid;
+      min-height: clamp(220px, 38vw, 410px);
+      padding: 2rem;
+      place-items: center;
+      color: #4d606c;
+      background:
+        linear-gradient(135deg, rgba(0, 40, 85, 0.04) 25%, transparent 25%) 0 0 / 22px 22px,
+        linear-gradient(315deg, rgba(0, 169, 224, 0.05) 25%, transparent 25%) 0 0 / 22px 22px,
+        #eef3f5;
+      text-align: center;
+    }
+
+    figure.screenshot img:not([hidden]) + .image-placeholder {
+      display: none;
+    }
+
+    .placeholder-inner {
+      max-width: 34rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px dashed #9fb0ba;
+      border-radius: 9px;
+    }
+
+    .placeholder-label {
+      display: block;
+      color: var(--unity);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .placeholder-file {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.88rem;
+      overflow-wrap: anywhere;
+    }
+
+    figcaption {
+      padding: 0.75rem 1rem;
+      color: var(--muted);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .subsection {
+      margin-top: 1.6rem;
+      padding: 1.2rem 1.25rem 1.3rem;
+      background: #fbfcfc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .subsection h3 {
+      margin-top: 0;
+    }
+
+    .issue-box {
+      margin-top: 1.25rem;
+      padding: 1.2rem 1.25rem;
+      background: var(--warning-bg);
+      border: 1px solid #ebd292;
+      border-radius: 10px;
+    }
+
+    .issue-box h3 {
+      margin-top: 0;
+    }
+
+    .video-panel {
+      overflow: hidden;
+      background: var(--soft-blue);
+      border: 1px solid #afd8e8;
+      border-radius: 11px;
+    }
+
+    .video-placeholder {
+      display: grid;
+      min-height: 235px;
+      padding: clamp(1.5rem, 5vw, 2.75rem);
+      place-items: center;
+      text-align: center;
+    }
+
+    .video-placeholder-inner {
+      max-width: 38rem;
+    }
+
+    .video-icon {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 auto 1rem;
+      place-items: center;
+      color: #fff;
+      background: var(--unity);
+      border-radius: 50%;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .video-placeholder h3 {
+      margin: 0 0 0.45rem;
+    }
+
+    .video-placeholder p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .video-frame[hidden] {
+      display: none;
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .contact-box {
+      padding: clamp(1.35rem, 4vw, 2rem);
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 24px, rgba(0, 169, 224, 0.12) 24px 25px),
+        var(--unity);
+      border-top: 6px solid var(--expand);
+      border-radius: 12px;
+    }
+
+    .contact-box h2 {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .contact-box h2::after {
+      border-color: var(--expand);
+    }
+
+    .contact-box a {
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .contact-box strong {
+      color: inherit;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .article-navigation {
+      margin-top: 2.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .article-navigation .back-link {
+      margin: 0;
+    }
+
+    .site-footer {
+      padding: 1.3rem 1rem 2rem;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 880px) {
+      .toc-enabled .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        grid-row: 1;
+      }
+
+      main {
+        grid-row: 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 0.97rem;
+      }
+
+      .header-inner,
+      .layout {
+        width: min(100% - 1rem, 1120px);
+      }
+
+      .layout {
+        margin-top: 0.5rem;
+        gap: 0.75rem;
+      }
+
+      main,
+      .toc {
+        border-radius: 8px;
+      }
+
+      .step {
+        padding: 1.2rem 1rem 1.3rem;
+      }
+
+      .step::before {
+        left: 0.9rem;
+      }
+
+      .step h3 {
+        margin-left: 2.8rem;
+      }
+
+      .image-placeholder {
+        min-height: 190px;
+        padding: 1rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        font-size: 10.5pt;
+      }
+
+      .site-header {
+        color: #000;
+        background: #fff;
+        border-bottom: 3px solid #000;
+      }
+
+      .site-header h1,
+      .site-header .eyebrow {
+        color: #000;
+      }
+
+      .header-inner {
+        padding: 1rem 0;
+      }
+
+      .layout,
+      .toc-enabled .layout {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      main {
+        padding: 1rem 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .toc,
+      .back-link,
+      .video-section,
+      .site-footer {
+        display: none;
+      }
+
+      .step,
+      .subsection,
+      .issue-box,
+      figure.screenshot {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">MVNU Moodle FAQ</p>
+      <h1>How do I use Respondus LockDown Browser and Monitor for a Moodle quiz or exam?</h1>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="main-content">
+      <!-- This link intentionally opens in the same window. -->
+      <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+
+      <p class="article-opening"><strong>Respondus LockDown Browser</strong> is a secure browser that prevents students from printing, copying, opening other websites, using other applications, or leaving a Moodle quiz until they submit it. <strong>Respondus Monitor</strong> adds automated webcam proctoring and records the student during the attempt.</p>
+      <p>Use LockDown Browser when students will take a Moodle quiz or exam on their own device and you want to restrict access to other digital resources. It is available without a limit at MVNU. Respondus Monitor is reserved for <strong>fully online courses</strong> because MVNU has a limited number of Monitor licenses. Contact the <a href="mailto:cie@mvnu.edu"><strong>Center for Innovative Education</strong></a> to confirm license availability before you enable it. Residential students enrolled in an online course should take Monitor-required exams at the Test Center, as described below.</p>
+
+      <section id="choose-tool" data-toc="Choose the right tool" aria-labelledby="choose-tool-heading">
+        <h2 id="choose-tool-heading">Choose the Right Tool</h2>
+        <div class="subsection">
+          <h3>LockDown Browser</h3>
+          <p>LockDown Browser is appropriate when you want students to take a quiz or exam in a restricted testing environment. It does not record students, their surroundings, or their webcam. You may use it for any course without requesting permission from CIE.</p>
+        </div>
+        <div class="subsection">
+          <h3>Respondus Monitor</h3>
+          <p>Respondus Monitor requires LockDown Browser and then guides students through a webcam and environment check before the quiz begins. It records the attempt for the instructor to review afterward. Use it only for a fully online course after CIE confirms that a Monitor license is available.</p>
+        </div>
+      </section>
+
+      <section id="set-up-quiz" data-toc="Set up the quiz" aria-labelledby="set-up-quiz-heading">
+        <h2 id="set-up-quiz-heading">Set Up the Quiz or Exam</h2>
+        <p>Create and configure the Moodle quiz as you normally would, including its questions, availability dates, time limit, and grade settings. Then open the <strong>Respondus LockDown Browser Dashboard</strong> block from the toolbar on the right side of the course page. The Dashboard lists the quizzes available in the course and is where you apply Respondus settings.</p>
+
+        <!-- SCREENSHOT 01 START: Remove this entire figure block if the image is not needed. -->
+        <figure class="screenshot" data-screenshot-number="01">
+          <div class="screenshot-media">
+            <img src="images/01.png" alt="The toolbar on the right side of an MVNU Moodle course page with the Respondus LockDown Browser Dashboard block visible" decoding="async" onerror="this.hidden=true">
+            <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Respondus LockDown Browser Dashboard block in the right-side course toolbar">
+              <div class="placeholder-inner">
+                <span class="placeholder-label">Screenshot 01: Respondus Dashboard block</span>
+                <span class="placeholder-file path">images/01.png</span>
+              </div>
+            </div>
+          </div>
+          <figcaption>Open the Respondus LockDown Browser Dashboard from the block in the right-side course toolbar.</figcaption>
+        </figure>
+        <!-- SCREENSHOT 01 END -->
+
+        <ol class="step-list">
+          <li class="step">
+            <h3>Locate the quiz in the Dashboard</h3>
+            <p>Find the quiz or exam you want to secure. Select the collapsible arrow beside its name, then select <strong>Settings</strong>.</p>
+          </li>
+
+          <li class="step">
+            <h3>Require LockDown Browser</h3>
+            <p>Select <strong>Require LockDown Browser for this exam</strong>. Leave the proctoring setting at <strong>Don't require Respondus Monitor for this exam</strong> when you only need the restricted browser.</p>
+
+            <!-- SCREENSHOT 02 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="02">
+              <div class="screenshot-media">
+                <img src="images/02.png" alt="Respondus LockDown Browser Dashboard settings for a Moodle quiz, showing the option to require LockDown Browser" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Respondus LockDown Browser requirement option for a Moodle quiz">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 02: Require LockDown Browser</span>
+                    <span class="placeholder-file path">images/02.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Use the quiz settings in the Dashboard to require LockDown Browser.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 02 END -->
+          </li>
+
+          <li class="step">
+            <h3>Enable Monitor only when approved</h3>
+            <p>If CIE has confirmed Monitor availability for your fully online course, select <strong>Require Respondus Monitor (automated proctoring) for this exam</strong>. Choose the appropriate proctoring option for the assessment and review the student startup sequence that Respondus displays.</p>
+            <p>Monitor requires a webcam, microphone, and broadband connection. If you enable a setting such as screen recording or a second camera, make sure students receive those requirements in advance.</p>
+          </li>
+
+          <li class="step">
+            <h3>Save and confirm the setting</h3>
+            <p>Select <strong>Save + Close</strong>. Back on the Dashboard, confirm that LockDown Browser is required for the quiz. If you enabled Monitor, confirm that the Monitor column shows it as required.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="test-center" data-toc="Use the Test Center" aria-labelledby="test-center-heading">
+        <h2 id="test-center-heading">Allow Test Center Use for Residential Students</h2>
+        <p>For residential students who are enrolled in a fully online course, arrange for the Test Center to proctor Monitor-required exams. This lets the student use LockDown Browser without using a Respondus Monitor license.</p>
+        <ol class="step-list">
+          <li class="step">
+            <h3>Open the Monitor advanced settings</h3>
+            <p>After selecting <strong>Require Respondus Monitor (automated proctoring) for this exam</strong>, select the plus sign beside <strong>Advanced Settings</strong>.</p>
+          </li>
+          <li class="step">
+            <h3>Allow delivery in a proctored lab</h3>
+            <p>Select <strong>Allow this exam to additionally be delivered in a proctored lab (no webcam recording)</strong>, then enter a password.</p>
+            <aside class="callout" aria-label="Test Center password warning">
+              <p><strong>Do not give this password to students.</strong> Send it only to the Test Center. A Test Center staff member will enter it when the student begins the exam.</p>
+            </aside>
+
+            <!-- SCREENSHOT 04 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="04">
+              <div class="screenshot-media">
+                <img src="images/04.png" alt="Respondus Monitor advanced settings with the option to allow delivery in a proctored lab and the password field visible" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the Respondus Monitor proctored-lab setting and password field">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 04: Allow Test Center delivery</span>
+                    <span class="placeholder-file path">images/04.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Enable the proctored-lab option and provide its password only to the Test Center.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 04 END -->
+          </li>
+        </ol>
+      </section>
+
+      <section id="prepare-students" data-toc="Prepare students" aria-labelledby="prepare-students-heading">
+        <h2 id="prepare-students-heading">Prepare Students Before the Exam</h2>
+        <p>Tell students well before the first graded quiz or exam that they will need to use Respondus LockDown Browser. When students open a quiz or exam that requires it, Moodle provides options to <strong>Download LockDown Browser</strong>, <strong>Check your LockDown Browser Setup</strong>, or <strong>Launch LockDown Browser</strong>. They must install the MVNU version on the same computer they plan to use for the assessment.</p>
+
+        <!-- SCREENSHOT 03 START: Remove this entire figure block if the image is not needed. -->
+        <figure class="screenshot" data-screenshot-number="03">
+          <div class="screenshot-media">
+            <img src="images/03.png" alt="A Moodle quiz page for students showing the Download LockDown Browser, Check your LockDown Browser Setup, and Launch LockDown Browser options" loading="lazy" decoding="async" onerror="this.hidden=true">
+            <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing the student options to download, check, and launch LockDown Browser from a Moodle quiz">
+              <div class="placeholder-inner">
+                <span class="placeholder-label">Screenshot 03: Student LockDown Browser options</span>
+                <span class="placeholder-file path">images/03.png</span>
+              </div>
+            </div>
+          </div>
+          <figcaption>Students access the download, setup check, and launch options from any Moodle quiz that requires LockDown Browser.</figcaption>
+        </figure>
+        <!-- SCREENSHOT 03 END -->
+
+        <p>Students do not install a separate Monitor application. When an exam requires Respondus Monitor, its webcam check and startup sequence run within LockDown Browser.</p>
+        <p>For a quiz or exam that requires Monitor, tell students to use a supported computer with a working webcam and microphone, a reliable broadband connection, and a quiet, well-lit location. Students should close other applications before launching LockDown Browser. Mobile phones cannot be used for either product.</p>
+
+        <aside class="callout" aria-label="Important practice quiz guidance">
+          <p><strong>Use a practice quiz:</strong> Create a short, low-stakes practice quiz that requires the <strong>same Respondus product</strong> as the graded quizzes or exams. For example, use LockDown Browser alone for a LockDown Browser course, or LockDown Browser with Monitor for a Monitor course. Give students multiple attempts and leave the practice quiz available throughout the course so they can test a different computer or network if needed.</p>
+        </aside>
+
+      </section>
+
+      <section id="review-monitor" data-toc="Review Monitor results" aria-labelledby="review-monitor-heading">
+        <h2 id="review-monitor-heading">Review Respondus Monitor Results</h2>
+        <p>After a Monitor quiz or exam is completed, return to the <strong>Respondus LockDown Browser Dashboard</strong>. Use the quiz's context menu to open <strong>Class Results</strong>. Review the results and recordings as needed before making a decision about an individual attempt.</p>
+        <p>Monitor records and flags events for instructor review. A flag is not, by itself, proof of an academic-integrity violation. Consider the recording and relevant course context before following your usual academic-integrity process.</p>
+      </section>
+
+      <!--
+        VIDEO SETUP: Paste the OneDrive embed URL between the quotation marks in
+        data-video-embed-url below. Leave it empty to show the coming-soon state.
+      -->
+      <section class="video-section" id="video" data-toc="Video walkthrough" data-video-embed-url="" aria-labelledby="video-heading">
+        <h2 id="video-heading">Video Walkthrough</h2>
+        <div class="video-panel">
+          <div class="video-placeholder" data-video-placeholder>
+            <div class="video-placeholder-inner">
+              <span class="video-icon" aria-hidden="true">▶</span>
+              <h3>Video Coming Soon</h3>
+              <p>A video walkthrough is being developed. The written instructions above provide the complete process in the meantime.</p>
+            </div>
+          </div>
+          <div class="video-frame" data-video-frame hidden>
+            <iframe data-video-iframe title="Video walkthrough: using Respondus LockDown Browser and Monitor for a Moodle quiz or exam" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-box" id="help" data-toc="Need help?" aria-labelledby="help-heading">
+        <h2 id="help-heading">Need Help?</h2>
+        <p>For help with Moodle, email the <strong>Center for Innovative Education</strong> at <a href="mailto:cie@mvnu.edu">cie@mvnu.edu</a>.</p>
+        <p>Please include the course name and a brief description of what you're trying to do or what isn't working. Screenshots are helpful when available.</p>
+      </section>
+
+      <nav class="article-navigation" aria-label="Return to Moodle FAQ">
+        <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+      </nav>
+    </main>
+
+    <!-- Built automatically for sufficiently long articles. -->
+    <nav class="toc" data-toc-nav aria-label="On this page" hidden>
+      <h2>On This Page</h2>
+      <ol data-toc-list></ol>
+    </nav>
+  </div>
+
+  <footer class="site-footer">
+    <p>Center for Innovative Education · Mount Vernon Nazarene University</p>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /*
+        Long articles receive an On This Page menu automatically. A page must
+        have at least four marked sections and at least 700 words in <main>.
+      */
+      const minimumHeadings = 4;
+      const minimumWords = 700;
+      const main = document.querySelector("main");
+      const tocNav = document.querySelector("[data-toc-nav]");
+      const tocList = document.querySelector("[data-toc-list]");
+      const tocSections = Array.from(main.querySelectorAll("section[data-toc]"));
+      const wordCount = (main.textContent.match(/\b[\w’'-]+\b/g) || []).length;
+
+      if (tocSections.length >= minimumHeadings && wordCount >= minimumWords) {
+        tocSections.forEach(function (section) {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = "#" + section.id;
+          link.textContent = section.dataset.toc;
+          item.appendChild(link);
+          tocList.appendChild(item);
+        });
+
+        tocNav.hidden = false;
+        document.body.classList.add("toc-enabled");
+      }
+
+      /*
+        The video stays in its coming-soon state until a OneDrive embed URL is
+        added to data-video-embed-url on the Video Walkthrough section.
+      */
+      const videoSection = document.querySelector("[data-video-embed-url]");
+      const embedUrl = videoSection.dataset.videoEmbedUrl.trim();
+
+      if (embedUrl) {
+        const iframe = videoSection.querySelector("[data-video-iframe]");
+        const frame = videoSection.querySelector("[data-video-frame]");
+        const placeholder = videoSection.querySelector("[data-video-placeholder]");
+
+        iframe.src = embedUrl;
+        frame.hidden = false;
+        placeholder.hidden = true;
+      }
+    }());
+  </script>
+</body>
+</html>
