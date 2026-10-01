@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Use Moodle 4.5 Single view to review one student or grade item, enter manual scores, and manage intentional overrides and exclusions.">
+  <title>How can I focus on one student or one assignment in the gradebook? | MVNU Moodle FAQ</title>
+  <style>
+    :root {
+      /* MVNU brand palette */
+      --unity: #002855;
+      --unity-dark: #00142b;
+      --purpose: #ffffff;
+      --expand: #00a9e0;
+      --expand-dark: #006b8e;
+      --drive: #046a38;
+      --explore: #f1c400;
+      --ink: #17324a;
+      --muted: #536b7d;
+      --line: #cedae3;
+      --paper: #ffffff;
+      --page: #f2f7fa;
+      --warning-bg: #fff9dc;
+      --warning-line: #f1c400;
+      --soft-blue: #eaf7fc;
+      --soft-teal: #eef8f7;
+      --shadow: 0 12px 32px rgba(0, 40, 85, 0.1);
+      --radius: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 1.25rem;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--expand-dark);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.16em;
+    }
+
+    a:hover {
+      color: var(--drive);
+    }
+
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--explore);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 100;
+      padding: 0.65rem 0.9rem;
+      color: var(--unity);
+      background: #fff;
+      border: 2px solid var(--explore);
+      border-radius: 6px;
+      transform: translateY(-150%);
+      transition: transform 0.15s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 25px, rgba(0, 169, 224, 0.12) 25px 26px),
+        var(--unity);
+      border-bottom: 6px solid var(--expand);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(1.8rem, 5vw, 3.4rem) 0 clamp(2rem, 5vw, 3.6rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--expand);
+      font-size: 0.82rem;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--unity);
+      font-family: inherit;
+      font-weight: 750;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 940px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(2rem, 4.7vw, 3.75rem);
+      letter-spacing: -0.025em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 1.6rem auto 4rem;
+      align-items: start;
+    }
+
+    .toc-enabled .layout {
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
+
+    main {
+      min-width: 0;
+      padding: clamp(1.35rem, 4vw, 3.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.35rem;
+      color: var(--unity);
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .back-link::before {
+      content: "\2190";
+      color: var(--expand-dark);
+      font-size: 1.15em;
+      line-height: 1;
+    }
+
+    .back-link:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    .article-opening {
+      margin: 0 0 1.1rem;
+      font-size: 1.06rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--expand);
+      border-radius: 10px;
+      box-shadow: 0 8px 22px rgba(0, 40, 85, 0.07);
+    }
+
+    .toc[hidden] {
+      display: none;
+    }
+
+    .toc h2 {
+      margin: 0 0 0.65rem;
+      padding: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border: 0;
+    }
+
+    .toc h2::after {
+      display: none;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .toc li + li {
+      margin-top: 0.4rem;
+    }
+
+    .toc a {
+      color: var(--ink);
+      font-size: 0.93rem;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      color: var(--expand-dark);
+      text-decoration: underline;
+    }
+
+    section + section {
+      margin-top: 3.25rem;
+      padding-top: 0.25rem;
+    }
+
+    h2 {
+      margin: 0 0 1.1rem;
+      padding-bottom: 0.55rem;
+      font-size: clamp(1.6rem, 3vw, 2.15rem);
+      border-bottom: 2px solid var(--line);
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      width: 4rem;
+      margin-bottom: -0.65rem;
+      padding-top: 0.55rem;
+      border-bottom: 4px solid var(--expand);
+    }
+
+    h3 {
+      margin: 2rem 0 0.6rem;
+      font-size: clamp(1.2rem, 2.2vw, 1.48rem);
+    }
+
+    p {
+      margin: 0.7rem 0 1rem;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4rem;
+    }
+
+    li + li {
+      margin-top: 0.35rem;
+    }
+
+    strong {
+      color: var(--unity);
+    }
+
+    .callout {
+      margin: 1.5rem 0;
+      padding: 1rem 1.15rem;
+      background: var(--warning-bg);
+      border-left: 5px solid var(--warning-line);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 1.3rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.4rem 1.35rem 1.5rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      counter-increment: steps;
+    }
+
+    .step::before {
+      content: counter(steps);
+      position: absolute;
+      top: 1.15rem;
+      left: 1.15rem;
+      display: grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      color: var(--unity);
+      background: var(--expand);
+      border-radius: 50%;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .step h3 {
+      display: flex;
+      min-height: 2.25rem;
+      margin: 0 0 0.7rem 3rem;
+      align-items: center;
+    }
+
+    .path,
+    code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    code {
+      padding: 0.1rem 0.28rem;
+      color: var(--unity);
+      background: #f0f4f7;
+      border-radius: 4px;
+    }
+
+    .menu-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.3rem 0;
+      padding: 0.45rem 0.7rem;
+      color: var(--unity);
+      background: var(--soft-teal);
+      border: 1px solid #b9dcda;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    figure.screenshot {
+      margin: 1.3rem 0 0;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #cbd7dd;
+      border-radius: 10px;
+    }
+
+    .screenshot-media {
+      background: #eef3f5;
+    }
+
+    figure.screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figure.screenshot img[hidden] {
+      display: none;
+    }
+
+    .image-placeholder {
+      display: grid;
+      min-height: clamp(220px, 38vw, 410px);
+      padding: 2rem;
+      place-items: center;
+      color: #4d606c;
+      background:
+        linear-gradient(135deg, rgba(0, 40, 85, 0.04) 25%, transparent 25%) 0 0 / 22px 22px,
+        linear-gradient(315deg, rgba(0, 169, 224, 0.05) 25%, transparent 25%) 0 0 / 22px 22px,
+        #eef3f5;
+      text-align: center;
+    }
+
+    figure.screenshot img:not([hidden]) + .image-placeholder {
+      display: none;
+    }
+
+    .placeholder-inner {
+      max-width: 34rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px dashed #9fb0ba;
+      border-radius: 9px;
+    }
+
+    .placeholder-label {
+      display: block;
+      color: var(--unity);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .placeholder-file {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.88rem;
+      overflow-wrap: anywhere;
+    }
+
+    figcaption {
+      padding: 0.75rem 1rem;
+      color: var(--muted);
+      background: #fff;
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .subsection {
+      margin-top: 1.6rem;
+      padding: 1.2rem 1.25rem 1.3rem;
+      background: #fbfcfc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .subsection h3 {
+      margin-top: 0;
+    }
+
+    .issue-box {
+      margin-top: 1.25rem;
+      padding: 1.2rem 1.25rem;
+      background: var(--warning-bg);
+      border: 1px solid #ebd292;
+      border-radius: 10px;
+    }
+
+    .issue-box h3 {
+      margin-top: 0;
+    }
+
+    .video-panel {
+      overflow: hidden;
+      background: var(--soft-blue);
+      border: 1px solid #afd8e8;
+      border-radius: 11px;
+    }
+
+    .video-placeholder {
+      display: grid;
+      min-height: 235px;
+      padding: clamp(1.5rem, 5vw, 2.75rem);
+      place-items: center;
+      text-align: center;
+    }
+
+    .video-placeholder-inner {
+      max-width: 38rem;
+    }
+
+    .video-icon {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 auto 1rem;
+      place-items: center;
+      color: #fff;
+      background: var(--unity);
+      border-radius: 50%;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .video-placeholder h3 {
+      margin: 0 0 0.45rem;
+    }
+
+    .video-placeholder p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .video-frame[hidden] {
+      display: none;
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .contact-box {
+      padding: clamp(1.35rem, 4vw, 2rem);
+      color: #fff;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 24px, rgba(0, 169, 224, 0.12) 24px 25px),
+        var(--unity);
+      border-top: 6px solid var(--expand);
+      border-radius: 12px;
+    }
+
+    .contact-box h2 {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .contact-box h2::after {
+      border-color: var(--expand);
+    }
+
+    .contact-box a {
+      color: #fff;
+      font-weight: 750;
+    }
+
+    .contact-box strong {
+      color: inherit;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .article-navigation {
+      margin-top: 2.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .article-navigation .back-link {
+      margin: 0;
+    }
+
+    .site-footer {
+      padding: 1.3rem 1rem 2rem;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 880px) {
+      .toc-enabled .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        grid-row: 1;
+      }
+
+      main {
+        grid-row: 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 0.97rem;
+      }
+
+      .header-inner,
+      .layout {
+        width: min(100% - 1rem, 1120px);
+      }
+
+      .layout {
+        margin-top: 0.5rem;
+        gap: 0.75rem;
+      }
+
+      main,
+      .toc {
+        border-radius: 8px;
+      }
+
+      .step {
+        padding: 1.2rem 1rem 1.3rem;
+      }
+
+      .step::before {
+        left: 0.9rem;
+      }
+
+      .step h3 {
+        margin-left: 2.8rem;
+      }
+
+      .image-placeholder {
+        min-height: 190px;
+        padding: 1rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        font-size: 10.5pt;
+      }
+
+      .site-header {
+        color: #000;
+        background: #fff;
+        border-bottom: 3px solid #000;
+      }
+
+      .site-header h1,
+      .site-header .eyebrow {
+        color: #000;
+      }
+
+      .header-inner {
+        padding: 1rem 0;
+      }
+
+      .layout,
+      .toc-enabled .layout {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      main {
+        padding: 1rem 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .toc,
+      .back-link,
+      .video-section,
+      .site-footer {
+        display: none;
+      }
+
+      .step,
+      .subsection,
+      .issue-box,
+      figure.screenshot {
+        break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="eyebrow">MVNU Moodle FAQ</p>
+      <h1>How can I focus on one student or one assignment in the gradebook?</h1>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="main-content">
+      <!-- This link intentionally opens in the same window. -->
+      <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+
+      <p>Use <strong>Single view</strong> to see one student's grades across the course or students' grades for one assignment. This focused gradebook view makes it easier to review scores, enter grades in bulk, and make individual adjustments when needed.</p>
+
+      <section id="where-to-grade" data-toc="Where to grade" aria-labelledby="where-to-grade-heading">
+        <h2 id="where-to-grade-heading">Choose Where to Grade</h2>
+        <p>Moodle provides two places to enter grades, and the right choice depends on what you're grading:</p>
+        <ul>
+          <li><strong>In the activity:</strong> Grade Assignment submissions, Forum work, and Quiz answers in the activity itself. This keeps the grade connected to the work, feedback, rubrics, and any grading workflow. Those grades then appear in the gradebook.</li>
+          <li><strong>In the gradebook:</strong> Use <strong>Grader report</strong> or <strong>Single view</strong> to enter scores for manual grade items, or to make an intentional grade override. A manual grade item is a gradebook entry that isn't connected to a Moodle activity.</li>
+        </ul>
+        <p>Keep manual grade items to a minimum. For a presentation, paper exam, or other work completed outside Moodle, you can use an <strong>Assignment</strong> with submission types disabled. It still provides instructions, a <strong>Due date</strong>, and activity-based grading without requiring students to upload anything. A manual grade item doesn't provide an assignment due date.</p>
+        <p>Single view is especially helpful during a student conference, when reviewing scores for one assessment, or when entering an existing manual item such as a participation score. Reviewing a blank grade can also help you identify something to investigate, but a blank doesn't tell you whether work is missing or just hasn't been graded. Check the activity before deciding.</p>
+      </section>
+
+      <section id="review-grades" data-toc="Review one student or item" aria-labelledby="review-grades-heading">
+        <h2 id="review-grades-heading">Review One Student or Grade Item</h2>
+        <ol class="step-list">
+          <li class="step">
+            <h3>Open Single view</h3>
+            <p>Open your course and select <strong>Grades</strong> from the course navigation. In the gradebook navigation menu, select <strong>Single view</strong>.</p>
+            <p><span class="menu-path" aria-label="Grades, then Single view"><strong>Grades</strong> &rarr; <strong>Single view</strong></span></p>
+            <p>If you're already in <strong>Grader report</strong>, you can also open the three-dot menu beside a student's name or a grade item's heading and select <strong>Single view for this user</strong> or <strong>Single view for this item</strong>.</p>
+            <!-- SCREENSHOT 01 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="01">
+              <div class="screenshot-media">
+                <img src="images/01.png" alt="Grader report three-dot menus showing Single view for this user beside a student and Single view for this item beside a grade item" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing open single view from the three-dot menus">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 01: Open Single view from the three-dot menus</span>
+                    <span class="placeholder-file path">images/01.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Use the three-dot menu beside a student or grade item to open its focused report.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 01 END -->
+          </li>
+          <li class="step">
+            <h3>Choose the student or grade item</h3>
+            <p>Under <strong>View by</strong>, choose one of these options:</p>
+            <ul>
+              <li><strong>Users:</strong> Search for and select a student to see their grades across the course.</li>
+              <li><strong>Grade items:</strong> Open <strong>Select a grade item</strong>, then search for and select the assignment, quiz, forum, or manual item to see students' grades for that item.</li>
+            </ul>
+            <p>If a group filter is available, make sure it includes the students you want to review. Moodle can remember your last selection, so check the student or item named in the report heading.</p>
+            <!-- SCREENSHOT 02 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="02">
+              <div class="screenshot-media">
+                <img src="images/02.png" alt="Single view with the View by Users and Grade items controls, a selected grade item, and its grade table" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing switch between users and grade items">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 02: Switch between Users and Grade items</span>
+                    <span class="placeholder-file path">images/02.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Use <strong>View by</strong> to choose your focus, then select the student or grade item you need.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 02 END -->
+          </li>
+          <li class="step">
+            <h3>Read the focused report</h3>
+            <p>Review the <strong>Grade</strong>, <strong>Range</strong>, and <strong>Feedback</strong> columns. <strong>Range</strong> shows the item's grading scale, so a score of 18 in a 0–20 range means 18 out of 20.</p>
+            <p>The <strong>Override</strong> and <strong>Exclude</strong> columns show whether those settings apply. You can use the navigation at the bottom to move to another student or item. If there are additional pages, use the page controls or <strong>Items per page</strong> to see more rows.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="change-grades" data-toc="Enter or override grades" aria-labelledby="change-grades-heading">
+        <h2 id="change-grades-heading">Enter or Override Grades</h2>
+        <h3>Enter Scores for a Manual Grade Item</h3>
+        <p>Select the manual item under <strong>Grade items</strong> and turn <strong>Edit mode</strong> on. Enter each student's score in <strong>Grade</strong>, add <strong>Feedback</strong> if needed, and select <strong>Save</strong> at the bottom. An ordinary manual item doesn't require an <strong>Override</strong> selection.</p>
+
+        <h3>Override an Activity Grade Only When Needed</h3>
+        <aside class="callout" aria-label="Grade override warning">
+          <p><strong>An override stops the activity from updating that gradebook grade.</strong> Later grading or regrading in the activity won't replace the overridden score until you remove the override. Correct ordinary grading errors in the activity whenever possible.</p>
+        </aside>
+        <p>Use an override only when the gradebook score needs to differ deliberately from the activity's score, such as a documented adjustment that can't be recorded appropriately in the activity.</p>
+        <ol>
+          <li>Select the student or grade item and turn <strong>Edit mode</strong> on.</li>
+          <li>Select <strong>Override</strong> for only the row you intend to change. This enables its grade and feedback fields.</li>
+        </ol>
+        <!-- SCREENSHOT 03 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="03">
+              <div class="screenshot-media">
+                <img src="images/03.png" alt="Single view in Edit mode with Override selected for one activity grade and the Grade and Feedback fields enabled" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing override one activity grade">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 03: Override one activity grade</span>
+                    <span class="placeholder-file path">images/03.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Select <strong>Override</strong> only for the intended row. Leave other grades and the <strong>Exclude</strong> column unchanged.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 03 END -->
+        <ol start="3">
+          <li>Enter the replacement <strong>Grade</strong> within the item's <strong>Range</strong>. Add a brief explanation in <strong>Feedback</strong> when appropriate for the student to read.</li>
+          <li>Select <strong>Save</strong>, then verify the score and override status. Save before switching students, items, or pages.</li>
+        </ol>
+        <p>Leave calculated category and course totals alone. If a total looks wrong, investigate the underlying grades or gradebook setup instead of overriding the total.</p>
+
+        <h3>Remove an Override</h3>
+        <p>To return control to the activity, turn <strong>Edit mode</strong> on, clear <strong>Override</strong> for that row, and select <strong>Save</strong>. The activity's grade can replace the manually entered score, so confirm the resulting grade. If it still doesn't match the activity, contact CIE.</p>
+      </section>
+
+      <section id="exclude-grades" data-toc="Exclude an excused item" aria-labelledby="exclude-grades-heading">
+        <h2 id="exclude-grades-heading">Exclude an Excused Item</h2>
+        <p><strong>Exclude</strong> removes that grade from the student's grade calculation while retaining the grade entry. Use it when a student is excused from an item under your grading policy. With <strong>Edit mode</strong> on, select <strong>Exclude</strong> for the intended row and select <strong>Save</strong>. Clear it and save to include the grade again.</p>
+
+      </section>
+
+      <section id="bulk-insert" data-toc="Bulk insert grades" aria-labelledby="bulk-insert-heading">
+        <h2 id="bulk-insert-heading">Bulk Insert Grades</h2>
+        <p><strong>Bulk insert grades</strong> applies the same score to multiple entries. It's most useful when everyone affected should receive the same value:</p>
+        <ul>
+          <li><strong>A shared score for an existing manual item:</strong> Record the same participation credit or other common score for the whole class.</li>
+          <li><strong>Remaining zeros for a manual item:</strong> After recording earned scores, fill the remaining empty grades with zero when your policy calls for it and no entries need to remain ungraded.</li>
+        </ul>
+        <aside class="callout" aria-label="Bulk grade insertion warning">
+          <p><strong>Bulk insertion replaces scores; it doesn't add points to them.</strong> For activity grades, it also creates overrides for the scores it changes. Don't fill blanks with zeros while submissions await grading, students have extensions, or work is excused.</p>
+        </aside>
+        <ol class="step-list">
+          <li class="step">
+            <h3>Select one grade item and check the affected students</h3>
+            <p>Choose <strong>Grade items</strong> under <strong>View by</strong>, then select the item. Check any group filter and review the students' scores. Bulk insertion can affect entries beyond the visible page, so use <strong>Items per page</strong> or review each page before proceeding.</p>
+          </li>
+          <li class="step">
+            <h3>Open Bulk insert grades</h3>
+            <p>Turn <strong>Edit mode</strong> on. Save any pending edits first, then select <strong>Bulk insert grades</strong> from <strong>Actions</strong>.</p>
+            <p>In the dialog, select <strong>I understand that my unsaved changes will be lost.</strong> to enable the options.</p>
+          </li>
+          <li class="step">
+            <h3>Choose which grades to fill</h3>
+            <ul>
+              <li><strong>Empty grades:</strong> Fill entries that don't have a grade, leaving existing scores unchanged. A recorded zero already counts as a grade.</li>
+              <li><strong>All grades:</strong> Replace both existing scores and empty entries with the same value. Choose this only when you intend to replace every affected score.</li>
+            </ul>
+            <p>Enter the score in <strong>Insert new grade</strong>. Check the value before saving; the dialog starts with zero.</p>
+            <!-- SCREENSHOT 04 START: Remove this entire figure block if the image is not needed. -->
+            <figure class="screenshot" data-screenshot-number="04">
+              <div class="screenshot-media">
+                <img src="images/04.png" alt="Bulk insert grades dialog with the unsaved-changes acknowledgment, Empty grades and All grades options, Insert new grade field, and Save button" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="image-placeholder" role="img" aria-label="Screenshot placeholder showing choose empty grades or all grades">
+                  <div class="placeholder-inner">
+                    <span class="placeholder-label">Screenshot 04: Choose Empty grades or All grades</span>
+                    <span class="placeholder-file path">images/04.png</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption>Choose <strong>Empty grades</strong> to preserve existing scores. <strong>All grades</strong> replaces them.</figcaption>
+            </figure>
+            <!-- SCREENSHOT 04 END -->
+          </li>
+          <li class="step">
+            <h3>Save and verify the results</h3>
+            <p>Select <strong>Save</strong> in the dialog. This applies the bulk change. Review the resulting scores and any <strong>Override</strong> indicators before leaving the report.</p>
+          </li>
+        </ol>
+        <p>The <strong>Actions</strong> menu also includes <strong>Override all</strong>, <strong>Override none</strong>, <strong>Exclude all</strong>, and <strong>Exclude none</strong>. These change multiple rows' override or exclusion settings. Use the individual row controls for a change that belongs to one student or item.</p>
+      </section>
+
+      <!--
+        VIDEO SETUP: Paste the OneDrive embed URL between the quotation marks in
+        data-video-embed-url below. Leave it empty to show the coming-soon state.
+      -->
+      <section class="video-section" id="video" data-toc="Video walkthrough" data-video-embed-url="" aria-labelledby="video-heading">
+        <h2 id="video-heading">Video Walkthrough</h2>
+        <div class="video-panel">
+          <div class="video-placeholder" data-video-placeholder>
+            <div class="video-placeholder-inner">
+              <span class="video-icon" aria-hidden="true">▶</span>
+              <h3>Video Coming Soon</h3>
+              <p>A video walkthrough is being developed. The written instructions above provide the complete process in the meantime.</p>
+            </div>
+          </div>
+          <div class="video-frame" data-video-frame hidden>
+            <iframe data-video-iframe title="Video walkthrough: using Single view in the gradebook" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-box" id="help" data-toc="Need help?" aria-labelledby="help-heading">
+        <h2 id="help-heading">Need Help?</h2>
+        <p>For help with Moodle, email the <strong>Center for Innovative Education</strong> at <a href="mailto:cie@mvnu.edu">cie@mvnu.edu</a>.</p>
+        <p>Please include the course name and a brief description of what you're trying to do or what isn't working. Screenshots are helpful when available.</p>
+      </section>
+
+      <nav class="article-navigation" aria-label="Return to Moodle FAQ">
+        <a class="back-link" href="https://courses.mvnu.edu/course/view.php?id=12705">Back to Moodle FAQ</a>
+      </nav>
+    </main>
+
+    <!-- Built automatically for sufficiently long articles. -->
+    <nav class="toc" data-toc-nav aria-label="On this page" hidden>
+      <h2>On This Page</h2>
+      <ol data-toc-list></ol>
+    </nav>
+  </div>
+
+  <footer class="site-footer">
+    <p>Center for Innovative Education · Mount Vernon Nazarene University</p>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /*
+        Long articles receive an On This Page menu automatically. A page must
+        have at least four marked sections and at least 700 words in <main>.
+      */
+      const minimumHeadings = 4;
+      const minimumWords = 700;
+      const main = document.querySelector("main");
+      const tocNav = document.querySelector("[data-toc-nav]");
+      const tocList = document.querySelector("[data-toc-list]");
+      const tocSections = Array.from(main.querySelectorAll("section[data-toc]"));
+      const wordCount = (main.textContent.match(/\b[\w’'-]+\b/g) || []).length;
+
+      if (tocSections.length >= minimumHeadings && wordCount >= minimumWords) {
+        tocSections.forEach(function (section) {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = "#" + section.id;
+          link.textContent = section.dataset.toc;
+          item.appendChild(link);
+          tocList.appendChild(item);
+        });
+
+        tocNav.hidden = false;
+        document.body.classList.add("toc-enabled");
+      }
+
+      /*
+        The video stays in its coming-soon state until a OneDrive embed URL is
+        added to data-video-embed-url on the Video Walkthrough section.
+      */
+      const videoSection = document.querySelector("[data-video-embed-url]");
+      const embedUrl = videoSection.dataset.videoEmbedUrl.trim();
+
+      if (embedUrl) {
+        const iframe = videoSection.querySelector("[data-video-iframe]");
+        const frame = videoSection.querySelector("[data-video-frame]");
+        const placeholder = videoSection.querySelector("[data-video-placeholder]");
+
+        iframe.src = embedUrl;
+        frame.hidden = false;
+        placeholder.hidden = true;
+      }
+    }());
+  </script>
+</body>
+</html>
